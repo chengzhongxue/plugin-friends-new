@@ -1,0 +1,13 @@
+apiVersion: v1alpha1
+kind: AnnotationSetting
+metadata:
+  name: annotation-setting-link-rss
+spec:
+  targetRef:
+    group: core.halo.run
+    kind: Link
+  formSchema:
+    - $formkit: "url"
+      name: "rss_uri"
+      label: "RSS 地址"
+

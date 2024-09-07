@@ -1,0 +1,41 @@
+apiVersion: v1alpha1
+kind: Role
+metadata:
+  name: role-template-friends-view
+  labels:
+    halo.run/role-template: "true"
+  annotations:
+    rbac.authorization.halo.run/module: "朋友圈"
+    rbac.authorization.halo.run/display-name: "朋友圈查看"
+    rbac.authorization.halo.run/ui-permissions: |
+      ["plugin:friends:view"]
+rules:
+  - apiGroups: [ "friend.moony.la" ]
+    resources: [ "friends","friendposts" ]
+    verbs: [ "get", "list" ]
+  - apiGroups: [ "api.friend.moony.la" ]
+    resources: [ "friendposts"]
+    verbs: [ "get", "list" ]
+
+---
+
+apiVersion: v1alpha1
+kind: Role
+metadata:
+  name: role-template-friends-manage
+  labels:
+    halo.run/role-template: "true"
+  annotations:
+    rbac.authorization.halo.run/module: "朋友圈"
+    rbac.authorization.halo.run/display-name: "朋友圈管理"
+    rbac.authorization.halo.run/ui-permissions: |
+      ["plugin:friends:manage"]
+    rbac.authorization.halo.run/dependencies: |
+      ["role-template-friends-view"]
+rules:
+  - apiGroups: [ "friend.moony.la" ]
+    resources: [ "friendposts"]
+    verbs: [ "create", "patch", "update", "delete", "deletecollection" ]
+  - apiGroups: [ "api.friend.moony.la" ]
+    resources: [ "friendposts"]
+    verbs: [ "create", "patch", "update", "delete", "deletecollection" ]

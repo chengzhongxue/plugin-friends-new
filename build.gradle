@@ -5,7 +5,7 @@ plugins {
     id "run.halo.plugin.devtools" version "0.1.1"
 }
 
-group 'run.halo.starter'
+group 'la.moony.friends'
 sourceCompatibility = JavaVersion.VERSION_17
 
 repositories {
@@ -16,11 +16,12 @@ repositories {
 }
 
 dependencies {
-    implementation platform('run.halo.tools.platform:plugin:2.11.0-SNAPSHOT')
+    implementation platform('run.halo.tools.platform:plugin:2.17.0-SNAPSHOT')
     compileOnly 'run.halo.app:api'
 
     testImplementation 'run.halo.app:api'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'com.rometools:rome:2.1.0'
 }
 
 test {
@@ -52,5 +53,32 @@ build {
 }
 
 halo {
-    version = '2.17'
+    version = '2.19.0'
 }
+
+haloPlugin {
+    openApi {
+        outputDir = file("$rootDir/api-docs/openapi/v3_0")
+        // 用于定义 API 分组规则
+        groupingRules {
+            // 此名称为 group name，定义后 groupedApiMappings 中的 /v3/api-docs/ 后的名称需要与之相同，要避免与 halo 中已经存在的 group 相同避免生成后出现与插件无关的 API
+            pluginFriendsApi {
+                // 分组显示名称
+                displayName = 'Extension API for Plugin Friends'
+                // 分组的 API 规则
+                pathsToMatch = ["/apis/friend.moony.la/v1alpha1/**",
+                                "/apis/api.friend.moony.la/v1alpha1/**"
+                ]
+            }
+        }
+        groupedApiMappings = [
+                '/v3/api-docs/pluginFriendsApi': 'pluginFriendsApi.json'
+        ]
+        generator {
+            // 默认配置可缺省
+            outputDir = file("${projectDir}/ui/src/api/generated")
+        }
+    }
+
+}
+

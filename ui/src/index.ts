@@ -1,6 +1,6 @@
 import { definePlugin } from "@halo-dev/console-shared";
-import HomeView from "./views/HomeView.vue";
-import { IconPlug } from "@halo-dev/components";
+import Friend from "./views/Friend.vue";
+import RiBloggerLine from '~icons/ri/blogger-line';
 import { markRaw } from "vue";
 
 export default definePlugin({
@@ -9,17 +9,18 @@ export default definePlugin({
     {
       parentName: "Root",
       route: {
-        path: "/example",
-        name: "Example",
-        component: HomeView,
+        path: "/friends",
+        name: "Friends",
+        component: Friend,
         meta: {
-          title: "示例页面",
+          title: "朋友圈",
           searchable: true,
+          permissions: ["plugin:friends:view"],
           menu: {
-            name: "示例页面",
-            group: "示例分组",
-            icon: markRaw(IconPlug),
-            priority: 0,
+            name: "朋友圈",
+            icon: markRaw(RiBloggerLine),
+            group: "content",
+            priority: 20,
           },
         },
       },
