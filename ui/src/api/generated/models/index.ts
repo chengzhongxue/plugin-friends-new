@@ -15,5 +15,4 @@ export * from './move-operation';
 export * from './remove-operation';
 export * from './replace-operation';
 export * from './rss-detail';
-export * from './rss-detail-list';
 export * from './test-operation';

@@ -24,7 +24,7 @@ import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError
 // @ts-ignore
 import type { FriendPostList } from '../models';
 // @ts-ignore
-import type { RssDetailList } from '../models';
+import type { RssDetail } from '../models';
 /**
  * ApiFriendMoonyLaV1alpha1FriendPostApi - axios parameter creator
  * @export
@@ -187,7 +187,7 @@ export const ApiFriendMoonyLaV1alpha1FriendPostApiFp = function(configuration?: 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async parsingRss(rssUrl: string, fetchLimitNumber?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RssDetailList>> {
+        async parsingRss(rssUrl: string, fetchLimitNumber?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RssDetail>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.parsingRss(rssUrl, fetchLimitNumber, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ApiFriendMoonyLaV1alpha1FriendPostApi.parsingRss']?.[localVarOperationServerIndex]?.url;
@@ -218,7 +218,7 @@ export const ApiFriendMoonyLaV1alpha1FriendPostApiFactory = function (configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        parsingRss(requestParameters: ApiFriendMoonyLaV1alpha1FriendPostApiParsingRssRequest, options?: RawAxiosRequestConfig): AxiosPromise<RssDetailList> {
+        parsingRss(requestParameters: ApiFriendMoonyLaV1alpha1FriendPostApiParsingRssRequest, options?: RawAxiosRequestConfig): AxiosPromise<RssDetail> {
             return localVarFp.parsingRss(requestParameters.rssUrl, requestParameters.fetchLimitNumber, options).then((request) => request(axios, basePath));
         },
     };

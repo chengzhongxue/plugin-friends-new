@@ -18,7 +18,7 @@
 import type { Channel } from './channel';
 
 /**
- * A chunk of items.
+ * 
  * @export
  * @interface RssDetail
  */

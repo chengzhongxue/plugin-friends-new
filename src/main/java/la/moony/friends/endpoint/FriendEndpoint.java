@@ -65,7 +65,7 @@ public class FriendEndpoint implements CustomEndpoint {
                     )
                     .response(
                         responseBuilder()
-                            .implementation(ListResult.generateGenericClass(RssDetail.class))
+                            .implementation(RssDetail.class)
                     );
             }).build();
     }

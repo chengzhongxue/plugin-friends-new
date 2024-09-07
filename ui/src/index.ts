@@ -2,6 +2,7 @@ import { definePlugin } from "@halo-dev/console-shared";
 import Friend from "./views/Friend.vue";
 import RiBloggerLine from '~icons/ri/blogger-line';
 import { markRaw } from "vue";
+import {FriendsRssExtension} from "@/editor";
 
 export default definePlugin({
   components: {},
@@ -26,5 +27,9 @@ export default definePlugin({
       },
     },
   ],
-  extensionPoints: {},
+  extensionPoints: {
+    "default:editor:extension:create": () => {
+      return [FriendsRssExtension];
+    },
+  },
 });
