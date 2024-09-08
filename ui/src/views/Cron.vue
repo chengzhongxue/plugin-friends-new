@@ -47,7 +47,7 @@ const formSchema = ref(
         name: 'cron',
         label: '定时表达式',
         validation: 'required',
-        help: '定时任务表达式，请参考：https://moony.la/cron'
+        help: '定时任务表达式，请参考文档'
       }
     },
     {
