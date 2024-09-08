@@ -95,8 +95,8 @@ const FriendsRssExtension = Node.create({
       nodeInputRule({
         find: /^\$friends-rss\$$/,
         type: this.type,
-        getAttributes: (t) => ({ 
-          src: t[1] 
+        getAttributes: (e) => ({ 
+          src: e[1] 
         }),
       }),
     ];
@@ -144,7 +144,7 @@ const FriendsRssExtension = Node.create({
       },
       getBubbleMenu({ editor }: { editor: Editor }) {
         return {
-          pluginKey: "friends-rss",
+          pluginKey: "friends-rss-bubble-menu",
           shouldShow: ({ state }: { state: EditorState }) => {
             return isActive(state, FriendsRssExtension.name);
           },

@@ -3,6 +3,7 @@ import Friend from "./views/Friend.vue";
 import RiBloggerLine from '~icons/ri/blogger-line';
 import { markRaw } from "vue";
 import {FriendsRssExtension} from "@/editor";
+import '@kunkunyu/fridends-rss';
 
 export default definePlugin({
   components: {},

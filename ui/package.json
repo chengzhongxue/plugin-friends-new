@@ -23,7 +23,8 @@
     "dayjs": "^1.11.9",
     "javascript-time-ago": "^2.5.9",
     "@vueuse/shared": "^10.9.0",
-    "@formkit/core": "^1.4.0"
+    "@formkit/core": "^1.4.0",
+    "@kunkunyu/fridends-rss": "workspace:*"
   },
   "devDependencies": {
     "@halo-dev/ui-plugin-bundler-kit": "^2.17.0",

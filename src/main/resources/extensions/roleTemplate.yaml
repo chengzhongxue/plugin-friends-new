@@ -1,6 +1,24 @@
 apiVersion: v1alpha1
 kind: Role
 metadata:
+  name: role-template-fridends-rss-default
+  labels:
+    halo.run/role-template: "true"
+    halo.run/hidden: "true"
+    rbac.authorization.halo.run/aggregate-to-anonymous: "true"
+  annotations:
+    rbac.authorization.halo.run/module: "editor-fridends-rss"
+    rbac.authorization.halo.run/display-name: "编辑器RSS"
+rules:
+  - apiGroups: ["api.friend.moony.la"]
+    resources: ["parsingrss"]
+    verbs: [ "get", "list" ]
+
+---
+
+apiVersion: v1alpha1
+kind: Role
+metadata:
   name: role-template-friends-view
   labels:
     halo.run/role-template: "true"
@@ -14,7 +32,7 @@ rules:
     resources: [ "friends","friendposts" ]
     verbs: [ "get", "list" ]
   - apiGroups: [ "api.friend.moony.la" ]
-    resources: [ "friendposts"]
+    resources: [ "friendposts","parsingrss"]
     verbs: [ "get", "list" ]
 
 ---

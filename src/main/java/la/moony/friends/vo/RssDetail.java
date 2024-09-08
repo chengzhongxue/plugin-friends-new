@@ -1,14 +1,11 @@
 package la.moony.friends.vo;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import java.time.Instant;
-import java.util.Date;
 import java.util.List;
 
 
 @Data
-@NoArgsConstructor
 public class RssDetail {
 
     private Channel channel;

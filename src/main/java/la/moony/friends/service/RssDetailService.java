@@ -5,5 +5,5 @@ import reactor.core.publisher.Mono;
 
 public interface RssDetailService {
 
-    Mono<RssDetail> fetchRssDetail(String rssUrl,int fetchLimitNumber);
+    Mono<RssDetail> fetchRssDetail(String rssUrl, int fetchLimitNumber);
 }
