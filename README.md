@@ -3,7 +3,7 @@
 > 如果使用了之前版本，请清掉之前的所有数据，不然会有问题
 > `订阅` `订阅文章` 数据全部清除
 
-![Snipaste_2024-09-08_23-29-40.png](https://api.minio.yyds.pink/halo-docs/2024/09/Snipaste_2024-09-08_23-29-40.png)
+![Snipaste_2024-09-08_23-38-00.png](https://api.minio.yyds.pink/halo-docs/2024/09/Snipaste_2024-09-08_23-38-00.png)
 
 * 朋友圈管理插件, 支持在 Console 进行管理以及为主题端提供 `/friends` 页面路由。
 * 提供对 RSS 链接的订阅功能，支持获取其订阅内容

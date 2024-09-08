@@ -11,6 +11,8 @@ import la.moony.friends.service.FriendPostService;
 import la.moony.friends.util.CommonUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
@@ -33,6 +35,8 @@ import static run.halo.app.extension.index.query.QueryFactory.equal;
 @Component
 public class FriendPostServiceImpl implements FriendPostService {
 
+    private static final Logger log = LoggerFactory.getLogger(FriendPostServiceImpl.class);
+
     private final ReactiveExtensionClient client;
 
     public FriendPostServiceImpl(ReactiveExtensionClient client) {
@@ -50,8 +54,12 @@ public class FriendPostServiceImpl implements FriendPostService {
                 var rssUri = annotations.get("rss_uri");
                 if (StringUtils.isNotEmpty(rssUri)) {
                    return getSuccessfulRetainLimit()
-                       .flatMap(sum-> Flux.fromIterable(fetchFriendPost(rssUri,sum))
-                           .flatMap(rssPost -> {
+                       .flatMap(sum-> {
+                           List<FriendPost> friendPostList = fetchFriendPost(rssUri, sum);
+                           if (friendPostList == null) {
+                               return Mono.just(false);
+                           }
+                           return Flux.fromIterable(friendPostList).flatMap(rssPost -> {
                                var friendPostListOptions = new ListOptions();
                                friendPostListOptions.setFieldSelector(FieldSelector.of(
                                    equal("spec.postLink",rssPost.getSpec().getPostLink())
@@ -83,8 +91,8 @@ public class FriendPostServiceImpl implements FriendPostService {
                                        return Mono.just(false);
                                    });
                            })
-                           .then(delFriendPost(linkName,sum))
-                       );
+                           .then(delFriendPost(linkName,sum));
+                       });
                 }
                 return Mono.just(false);
             }).then();
@@ -132,7 +140,8 @@ public class FriendPostServiceImpl implements FriendPostService {
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            log.error("error in crawling blog", e);
+            return null;
         }
 
         return friendPostList;

@@ -12,12 +12,12 @@ spec:
     website: https://github.com/chengzhongxue
   logo: logo.png
   homepage: https://www.halo.run/store/apps/app-yISsV
-  repo: https://github.com/chengzhongxue/plugin-friends
-  issues: https://github.com/chengzhongxue/plugin-friends/issues
+  repo: https://github.com/chengzhongxue/plugin-friends-new
+  issues: https://github.com/chengzhongxue/plugin-friends-new/issues
   configMapName: plugin-friends-configMap
   settingName: plugin-friends-settings
   displayName: "朋友圈"
   description: "提供对 RSS 链接的订阅功能，支持获取其订阅内容"
   license:
     - name: "GPL-3.0"
-      url: "https://github.com/halo-dev/plugin-starter/blob/main/LICENSE"
+      url: "https://github.com/chengzhongxue/plugin-friends-new/blob/main/LICENSE"
