@@ -55,20 +55,16 @@ export class FriendsRss extends LitElement {
                   this.rssDetail?.channel.items,
                   (item) => item.link,
                   (item) => html`
-                    <li>
-                        <div class="items-center flex flex-col sm:flex-row relative p-2 gap-3">
-                            <div class="flex-1 shrink space-y-1 z-[1]">
-                                <a
-                                    href=${item?.link}
-                                    target="_blank"
-                                >
-                                    <h2 class="font-semibold text-base text-title line-clamp-2 lg:line-clamp-1">
-                                        ${item?.title}
-                                    </h2>
-                                </a>
-                                <p class="text-sm text-description line-clamp-2">${item?.description}</p>
-                            </div>
-                        </div>
+                    <li class="sm:flex-row relative p-2 space-y-1 z-[1]">
+                        <a
+                            href=${item?.link}
+                            target="_blank"
+                        >
+                            <h2 class="font-semibold text-base text-title line-clamp-2 lg:line-clamp-1">
+                                ${item?.title}
+                            </h2>
+                        </a>
+                        <p class="text-sm text-description line-clamp-2">${item?.description}</p>
                     </li>
                 `
               )}

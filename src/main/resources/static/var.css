@@ -1,6 +1,6 @@
 @media (prefers-color-scheme: dark) {
   .color-scheme-auto,
-  [data-color-scheme='auto'] hyperlink-card {
+  [data-color-scheme='auto'] friends-rss {
     color-scheme: dark;
     --friends-rss-title-color: #f4f4f5;
     --friends-rss-description-color: #a1a1aa;
@@ -9,7 +9,7 @@
 
 .color-scheme-dark,
 .dark,
-[data-color-scheme='dark'] hyperlink-card {
+[data-color-scheme='dark'] friends-rss {
     color-scheme: dark;
     --friends-rss-title-color: #f4f4f5;
     --friends-rss-description-color: #a1a1aa;

@@ -73,20 +73,16 @@
   `;let tt=et;customElements.get("loading-bar")||customElements.define("loading-bar",tt);var se=Object.defineProperty,D=(n,t,e,i)=>{for(var s=void 0,o=n.length-1,r;o>=0;o--)(r=n[o])&&(s=r(t,e,s)||s);return s&&se(t,e,s),s};const st=class st extends k{constructor(){super(...arguments),this.src="",this.layout="list",this.loading=!1}connectedCallback(){super.connectedCallback(),this.fetchRssDetail()}async fetchRssDetail(){try{this.loading=!0;const t=await fetch(`/apis/api.friend.moony.la/v1alpha1/parsingrss?rssUrl=${this.src}`);if(!t.ok)throw new Error("Failed to fetch site data");this.rssDetail=await t.json()}catch(t){console.error(t)}finally{this.loading=!1}}render(){var t;return this.loading?I`<loading-bar></loading-bar>`:I`
           <ul class="grid ${this.layout=="grid"?"grid-cols-2":""}">
               ${ee((t=this.rssDetail)==null?void 0:t.channel.items,e=>e.link,e=>I`
-                    <li>
-                        <div class="items-center flex flex-col sm:flex-row relative p-2 gap-3">
-                            <div class="flex-1 shrink space-y-1 z-[1]">
-                                <a
-                                    href=${e==null?void 0:e.link}
-                                    target="_blank"
-                                >
-                                    <h2 class="font-semibold text-base text-title line-clamp-2 lg:line-clamp-1">
-                                        ${e==null?void 0:e.title}
-                                    </h2>
-                                </a>
-                                <p class="text-sm text-description line-clamp-2">${e==null?void 0:e.description}</p>
-                            </div>
-                        </div>
+                    <li class="sm:flex-row relative p-2 space-y-1 z-[1]">
+                        <a
+                            href=${e==null?void 0:e.link}
+                            target="_blank"
+                        >
+                            <h2 class="font-semibold text-base text-title line-clamp-2 lg:line-clamp-1">
+                                ${e==null?void 0:e.title}
+                            </h2>
+                        </a>
+                        <p class="text-sm text-description line-clamp-2">${e==null?void 0:e.description}</p>
                     </li>
                 `)}
           </ul>
@@ -108,12 +104,6 @@
 .grid{display:grid;}
 .grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr));}
 .inline-block{display:inline-block;}
-.flex{display:flex;}
-.flex-1{flex:1 1 0%;}
-.shrink{flex-shrink:1;}
-.flex-col{flex-direction:column;}
-.items-center{align-items:center;}
-.gap-3{gap:0.75rem;}
 .space-y-1>:not([hidden])~:not([hidden]){--un-space-y-reverse:0;margin-top:calc(0.25rem * calc(1 - var(--un-space-y-reverse)));margin-bottom:calc(0.25rem * var(--un-space-y-reverse));}
 .p-2{padding:0.5rem;}
 .text-base{font-size:1rem;line-height:1.5rem;}
