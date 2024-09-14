@@ -171,7 +171,7 @@ public class SyncFriendPostReconciler implements Reconciler<Reconciler.Request> 
             status.setPhase(SyncFriendPost.Phase.FAILED);
             status.setFailureReason("CrawlingRSSError");
             status.setFailureMessage(e.getMessage());
-            log.debug("error in crawling rss", e);
+            log.error("error in crawling rss", e);
             return null;
         }
         return friendPostList;

@@ -2,8 +2,12 @@ package la.moony.friends.finders.impl;
 
 import jakarta.annotation.Nonnull;
 import la.moony.friends.extension.FriendPost;
+import la.moony.friends.extension.Link;
+import la.moony.friends.extension.LinkGroup;
 import la.moony.friends.finders.FriendFinder;
 import la.moony.friends.vo.FriendPostVo;
+import la.moony.friends.vo.LinkGroupVo;
+import la.moony.friends.vo.LinkVo;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.Sort;
@@ -12,14 +16,20 @@ import reactor.core.publisher.Mono;
 import run.halo.app.extension.*;
 import run.halo.app.extension.router.selector.FieldSelector;
 import run.halo.app.theme.finders.Finder;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import static org.springframework.data.domain.Sort.Order.asc;
 import static run.halo.app.extension.index.query.QueryFactory.*;
 
 
 @Finder("friendFinder")
 @RequiredArgsConstructor
 public class FriendFinderImpl implements FriendFinder {
+
+    static final String UNGROUPED_NAME = "ungrouped";
 
     private final ReactiveExtensionClient client;
 
@@ -54,6 +64,26 @@ public class FriendFinderImpl implements FriendFinder {
         return pageFriendPost(FieldSelector.of(query), pageRequest);
     }
 
+    @Override
+    public Flux<LinkGroupVo> linkGroupBy() {
+        return client.listAll(LinkGroup.class, new ListOptions(), defaultGroupSort())
+            .map(LinkGroupVo::from)
+            .concatMap(group -> linkListBy(group.getMetadata().getName())
+                .collectList()
+                .map(group::withLinks)
+                .defaultIfEmpty(group)
+            )
+            .mergeWith(Mono.defer(() -> linkListBy(UNGROUPED_NAME)
+                .collectList()
+                // do not return ungrouped group if no links
+                .filter(links -> !links.isEmpty())
+                .flatMap(links -> ungrouped()
+                    .map(LinkGroupVo::from)
+                    .map(group -> group.withLinks(links))
+                )
+            ));
+    }
+
     private Mono<ListResult<FriendPostVo>> pageFriendPost(FieldSelector fieldSelector, PageRequest page){
         var listOptions = new ListOptions();
         var query = all();
@@ -72,6 +102,71 @@ public class FriendFinderImpl implements FriendFinder {
             .defaultIfEmpty(
                 new ListResult<>(page.getPageNumber(), page.getPageSize(), 0L, List.of()));
 
+    }
+
+    public Flux<LinkVo> linkListBy(String groupName) {
+        var listOptions = new ListOptions();
+        var query = isNull("metadata.deletionTimestamp");
+        if (UNGROUPED_NAME.equals(groupName)) {
+            query = and(query, isNull("spec.groupName"));
+        } else {
+            query = and(query, equal("spec.groupName", groupName));
+        }
+        listOptions.setFieldSelector(FieldSelector.of(query));
+        return client.listAll(Link.class, listOptions, defaultLinkSort())
+            .map(LinkVo::from)
+            .concatMap(link -> friendPostListBy(link.getMetadata().getName())
+                .map(link::withFriendPosts)
+            )
+            .collectList()
+            .map(links -> {
+                // 排序逻辑
+                return links.stream()
+                    .sorted(Comparator.comparing(link -> {
+                            List<FriendPostVo> friendPosts = link.getFriendPosts();
+                            if (friendPosts != null && !friendPosts.isEmpty()) {
+                                return friendPosts.get(0).getSpec().getPubDate();
+                            }
+                            return null;
+                        }, Comparator.nullsLast(Comparator.reverseOrder())
+                    )).collect(Collectors.toList());
+            })
+            .flatMapMany(Flux::fromIterable);
+    }
+
+    public Mono<List<FriendPostVo>> friendPostListBy(String linkName) {
+        var listOptions = new ListOptions();
+        var query = isNull("metadata.deletionTimestamp");
+        query = and(query, equal("spec.linkName", linkName));
+        listOptions.setFieldSelector(FieldSelector.of(query));
+        var pageRequest = PageRequestImpl.of(pageNullSafe(1), sizeNullSafe(2), defaultSort());
+        return client.listBy(FriendPost.class, listOptions, pageRequest)
+            .flatMap(friendPosts -> Flux.fromStream(friendPosts.get())
+                .map(FriendPostVo::from).collectList());
+    }
+
+    Mono<LinkGroup> ungrouped() {
+        LinkGroup linkGroup = new LinkGroup();
+        linkGroup.setMetadata(new Metadata());
+        linkGroup.getMetadata().setName(UNGROUPED_NAME);
+        linkGroup.setSpec(new LinkGroup.LinkGroupSpec());
+        linkGroup.getSpec().setDisplayName("");
+        linkGroup.getSpec().setPriority(0);
+        return Mono.just(linkGroup);
+    }
+
+    static Sort defaultGroupSort() {
+        return Sort.by(asc("spec.priority"),
+            asc("metadata.creationTimestamp"),
+            asc("metadata.name")
+        );
+    }
+
+    static Sort defaultLinkSort() {
+        return Sort.by(asc("spec.priority"),
+            asc("metadata.creationTimestamp"),
+            asc("metadata.name")
+        );
     }
 
     static Sort defaultSort() {
