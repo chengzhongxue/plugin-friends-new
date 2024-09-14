@@ -29,7 +29,7 @@ metadata:
       ["plugin:friends:view"]
 rules:
   - apiGroups: [ "friend.moony.la" ]
-    resources: [ "friends","friendposts" ]
+    resources: [ "friendposts","syncfriendposts","cronfriendposts" ]
     verbs: [ "get", "list" ]
   - apiGroups: [ "api.friend.moony.la" ]
     resources: [ "friendposts","parsingrss"]
@@ -52,7 +52,7 @@ metadata:
       ["role-template-friends-view"]
 rules:
   - apiGroups: [ "friend.moony.la" ]
-    resources: [ "friendposts"]
+    resources: [ "friendposts","syncfriendposts","cronfriendposts"]
     verbs: [ "create", "patch", "update", "delete", "deletecollection" ]
   - apiGroups: [ "api.friend.moony.la" ]
     resources: [ "friendposts"]

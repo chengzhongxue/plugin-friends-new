@@ -15,4 +15,8 @@ export * from './move-operation';
 export * from './remove-operation';
 export * from './replace-operation';
 export * from './rss-detail';
+export * from './sync-friend-post';
+export * from './sync-friend-post-list';
+export * from './sync-friend-post-spec';
+export * from './sync-friend-post-status';
 export * from './test-operation';

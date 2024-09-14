@@ -82,6 +82,7 @@ public class CronCronFriendPostReconciler implements Reconciler<Reconciler.Reque
                                 return new Result(true, Duration.between(now, nextFromNow));
                             } else {
 
+
                                 this.friendPostService.synchronizationFriend().subscribe();
 
                                 ZonedDateTime zonedNow = now.atZone(zoneId);

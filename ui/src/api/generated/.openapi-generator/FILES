@@ -5,6 +5,7 @@ api.ts
 api/api-friend-moony-la-v1alpha1-friend-post-api.ts
 api/cron-friend-post-v1alpha1-api.ts
 api/friend-post-v1alpha1-api.ts
+api/sync-friend-post-v1alpha1-api.ts
 base.ts
 common.ts
 configuration.ts
@@ -28,4 +29,8 @@ models/move-operation.ts
 models/remove-operation.ts
 models/replace-operation.ts
 models/rss-detail.ts
+models/sync-friend-post-list.ts
+models/sync-friend-post-spec.ts
+models/sync-friend-post-status.ts
+models/sync-friend-post.ts
 models/test-operation.ts

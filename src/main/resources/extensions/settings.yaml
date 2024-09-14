@@ -17,3 +17,18 @@ spec:
           name: pageSize
           validation: required|Number
           value: 10
+        - $formkit: select
+          name: disableSynchronizationList
+          label: 禁止同步名单
+          multiple: true
+          clearable: true
+          searchable: true
+          action: /apis/api.plugin.halo.run/v1alpha1/plugins/PluginLinks/links
+          requestOption:
+            method: GET
+            pageField: page
+            sizeField: size
+            totalField: total
+            itemsField: items
+            labelField: spec.displayName
+            valueField: metadata.name

@@ -13,6 +13,7 @@ import {
   VTabbar,
 } from "@halo-dev/components";
 import {axiosInstance} from "@halo-dev/api-client";
+import SyncFriendPost from "@/views/SyncFriendPost.vue";
 
 const tabs = shallowRef([
   {
@@ -24,6 +25,11 @@ const tabs = shallowRef([
     id: "cron",
     label: "定时任务",
     component: markRaw(Cron),
+  },
+  {
+    id: "syncFriendPost",
+    label: "同步日志",
+    component: markRaw(SyncFriendPost),
   }
   
 ]);
@@ -78,6 +84,7 @@ const handleCreate = () => {
       <div class="bg-white">
         <FriendPostListItem ref="friendPost" v-if="activeIndex=='friendPost'"/>
         <Cron ref="cron" v-if="activeIndex=='cron'"/>
+        <SyncFriendPost ref="syncFriendPost" v-if="activeIndex=='syncFriendPost'"/>
       </div>
     </VCard>
   </div>

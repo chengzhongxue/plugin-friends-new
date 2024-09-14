@@ -38,3 +38,26 @@ export function timeAgo(
 
   return timeAgo.format(new Date(date));
 }
+
+
+export function calculateTimeDifferenceInSeconds(
+  startTimestamp: string | Date | number | undefined | null,
+  completionTimestamp: string | Date | number | undefined | null
+): string {
+  if (!startTimestamp || !completionTimestamp) {
+    return "Invalid input";
+  }
+
+  // 将输入转换为 Date 对象
+  const startDate = new Date(startTimestamp);
+  const completionDate = new Date(completionTimestamp);
+
+  // 计算时间差（以毫秒为单位）
+  const differenceInMilliseconds = completionDate.getTime() - startDate.getTime();
+
+  // 将时间差转换为秒
+  const differenceInSeconds = differenceInMilliseconds / 1000;
+
+  // 返回时间差的整数部分
+  return Math.floor(differenceInSeconds).toString();
+}

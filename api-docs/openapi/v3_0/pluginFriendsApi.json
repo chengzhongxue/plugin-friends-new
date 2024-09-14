@@ -2,10 +2,10 @@
   "openapi" : "3.0.1",
   "info" : {
     "title" : "Halo",
-    "version" : "2.17.0"
+    "version" : "2.19.0"
   },
   "servers" : [ {
-    "url" : "http://localhost:39222",
+    "url" : "http://localhost:50011",
     "description" : "Generated server url"
   } ],
   "security" : [ {
@@ -546,6 +546,217 @@
         },
         "tags" : [ "FriendPostV1alpha1" ]
       }
+    },
+    "/apis/friend.moony.la/v1alpha1/syncfriendposts" : {
+      "get" : {
+        "description" : "List SyncFriendPost",
+        "operationId" : "listSyncFriendPost",
+        "parameters" : [ {
+          "description" : "Page number. Default is 0.",
+          "in" : "query",
+          "name" : "page",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "description" : "Size number. Default is 0.",
+          "in" : "query",
+          "name" : "size",
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "description" : "Label selector. e.g.: hidden!=true",
+          "in" : "query",
+          "name" : "labelSelector",
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          }
+        }, {
+          "description" : "Field selector. e.g.: metadata.name==halo",
+          "in" : "query",
+          "name" : "fieldSelector",
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          }
+        }, {
+          "description" : "Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.",
+          "in" : "query",
+          "name" : "sort",
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SyncFriendPostList"
+                }
+              }
+            },
+            "description" : "Response syncfriendposts"
+          }
+        },
+        "tags" : [ "SyncFriendPostV1alpha1" ]
+      },
+      "post" : {
+        "description" : "Create SyncFriendPost",
+        "operationId" : "createSyncFriendPost",
+        "requestBody" : {
+          "content" : {
+            "*/*" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SyncFriendPost"
+              }
+            }
+          },
+          "description" : "Fresh syncfriendpost"
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SyncFriendPost"
+                }
+              }
+            },
+            "description" : "Response syncfriendposts created just now"
+          }
+        },
+        "tags" : [ "SyncFriendPostV1alpha1" ]
+      }
+    },
+    "/apis/friend.moony.la/v1alpha1/syncfriendposts/{name}" : {
+      "delete" : {
+        "description" : "Delete SyncFriendPost",
+        "operationId" : "deleteSyncFriendPost",
+        "parameters" : [ {
+          "description" : "Name of syncfriendpost",
+          "in" : "path",
+          "name" : "name",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Response syncfriendpost deleted just now"
+          }
+        },
+        "tags" : [ "SyncFriendPostV1alpha1" ]
+      },
+      "get" : {
+        "description" : "Get SyncFriendPost",
+        "operationId" : "getSyncFriendPost",
+        "parameters" : [ {
+          "description" : "Name of syncfriendpost",
+          "in" : "path",
+          "name" : "name",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SyncFriendPost"
+                }
+              }
+            },
+            "description" : "Response single syncfriendpost"
+          }
+        },
+        "tags" : [ "SyncFriendPostV1alpha1" ]
+      },
+      "patch" : {
+        "description" : "Patch SyncFriendPost",
+        "operationId" : "patchSyncFriendPost",
+        "parameters" : [ {
+          "description" : "Name of syncfriendpost",
+          "in" : "path",
+          "name" : "name",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json-patch+json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/JsonPatch"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SyncFriendPost"
+                }
+              }
+            },
+            "description" : "Response syncfriendpost patched just now"
+          }
+        },
+        "tags" : [ "SyncFriendPostV1alpha1" ]
+      },
+      "put" : {
+        "description" : "Update SyncFriendPost",
+        "operationId" : "updateSyncFriendPost",
+        "parameters" : [ {
+          "description" : "Name of syncfriendpost",
+          "in" : "path",
+          "name" : "name",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "content" : {
+            "*/*" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SyncFriendPost"
+              }
+            }
+          },
+          "description" : "Updated syncfriendpost"
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SyncFriendPost"
+                }
+              }
+            },
+            "description" : "Response syncfriendposts updated just now"
+          }
+        },
+        "tags" : [ "SyncFriendPostV1alpha1" ]
+      }
     }
   },
   "components" : {
@@ -967,6 +1178,118 @@
         "properties" : {
           "channel" : {
             "$ref" : "#/components/schemas/Channel"
+          }
+        }
+      },
+      "SyncFriendPost" : {
+        "required" : [ "apiVersion", "kind", "metadata", "spec", "status" ],
+        "type" : "object",
+        "properties" : {
+          "apiVersion" : {
+            "type" : "string"
+          },
+          "kind" : {
+            "type" : "string"
+          },
+          "metadata" : {
+            "$ref" : "#/components/schemas/Metadata"
+          },
+          "spec" : {
+            "$ref" : "#/components/schemas/SyncFriendPostSpec"
+          },
+          "status" : {
+            "$ref" : "#/components/schemas/SyncFriendPostStatus"
+          }
+        }
+      },
+      "SyncFriendPostList" : {
+        "required" : [ "first", "hasNext", "hasPrevious", "items", "last", "page", "size", "total", "totalPages" ],
+        "type" : "object",
+        "properties" : {
+          "first" : {
+            "type" : "boolean",
+            "description" : "Indicates whether current page is the first page."
+          },
+          "hasNext" : {
+            "type" : "boolean",
+            "description" : "Indicates whether current page has previous page."
+          },
+          "hasPrevious" : {
+            "type" : "boolean",
+            "description" : "Indicates whether current page has previous page."
+          },
+          "items" : {
+            "type" : "array",
+            "description" : "A chunk of items.",
+            "items" : {
+              "$ref" : "#/components/schemas/SyncFriendPost"
+            }
+          },
+          "last" : {
+            "type" : "boolean",
+            "description" : "Indicates whether current page is the last page."
+          },
+          "page" : {
+            "type" : "integer",
+            "description" : "Page number, starts from 1. If not set or equal to 0, it means no pagination.",
+            "format" : "int32"
+          },
+          "size" : {
+            "type" : "integer",
+            "description" : "Size of each page. If not set or equal to 0, it means no pagination.",
+            "format" : "int32"
+          },
+          "total" : {
+            "type" : "integer",
+            "description" : "Total elements.",
+            "format" : "int64"
+          },
+          "totalPages" : {
+            "type" : "integer",
+            "description" : "Indicates total pages.",
+            "format" : "int64"
+          }
+        }
+      },
+      "SyncFriendPostSpec" : {
+        "required" : [ "linkDisplayName", "linkName", "rss" ],
+        "type" : "object",
+        "properties" : {
+          "linkDisplayName" : {
+            "type" : "string"
+          },
+          "linkName" : {
+            "type" : "string"
+          },
+          "rss" : {
+            "type" : "string"
+          },
+          "syncCount" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }
+      },
+      "SyncFriendPostStatus" : {
+        "type" : "object",
+        "properties" : {
+          "completionTimestamp" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "failureMessage" : {
+            "type" : "string"
+          },
+          "failureReason" : {
+            "type" : "string"
+          },
+          "phase" : {
+            "type" : "string",
+            "enum" : [ "PENDING", "RUNNING", "SUCCEEDED", "FAILED" ]
+          },
+          "startTimestamp" : {
+            "type" : "string",
+            "format" : "date-time"
           }
         }
       },

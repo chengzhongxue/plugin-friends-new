@@ -2,14 +2,13 @@ package la.moony.friends;
 
 import la.moony.friends.extension.CronFriendPost;
 import la.moony.friends.extension.FriendPost;
-import org.apache.commons.lang3.BooleanUtils;
+import la.moony.friends.extension.SyncFriendPost;
 import org.springframework.stereotype.Component;
 import run.halo.app.extension.Scheme;
 import run.halo.app.extension.SchemeManager;
 import run.halo.app.extension.index.IndexSpec;
 import run.halo.app.plugin.BasePlugin;
 import run.halo.app.plugin.PluginContext;
-import java.util.Optional;
 
 import static run.halo.app.extension.index.IndexAttributeFactory.simpleAttribute;
 
@@ -26,7 +25,6 @@ public class FriendsPlugin extends BasePlugin {
     @Override
     public void start() {
         schemeManager.register(FriendPost.class, indexSpecs -> {
-
             indexSpecs.add(new IndexSpec()
                 .setName("spec.author")
                 .setIndexFunc(
@@ -59,6 +57,12 @@ public class FriendsPlugin extends BasePlugin {
                 }))
             );
         });
+        schemeManager.register(SyncFriendPost.class, indexSpecs -> {
+            indexSpecs.add(new IndexSpec()
+                .setName("spec.linkName")
+                .setIndexFunc(
+                    simpleAttribute(SyncFriendPost.class, syncFriendPost -> syncFriendPost.getSpec().getLinkName())));
+        });
         schemeManager.register(CronFriendPost.class);
     }
 
@@ -66,6 +70,7 @@ public class FriendsPlugin extends BasePlugin {
     public void stop() {
         schemeManager.unregister(Scheme.buildFromType(FriendPost.class));
         schemeManager.unregister(Scheme.buildFromType(CronFriendPost.class));
+        schemeManager.unregister(Scheme.buildFromType(SyncFriendPost.class));
 
     }
 }
