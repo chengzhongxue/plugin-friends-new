@@ -110,6 +110,15 @@ const handleDelete = async () => {
           />
         </template>
       </VEntityField>
+      <VEntityField v-if="syncFriendPost.metadata.deletionTimestamp">
+        <template #description>
+          <VStatusDot
+            v-tooltip="'删除中'"
+            state="warning"
+            animate
+          />
+        </template>
+      </VEntityField>
       <VEntityField
         v-if="(syncFriendPost.status.completionTimestamp !=null && syncFriendPost.status.completionTimestamp != '') || syncFriendPost.status.phase == 'SUCCEEDED'"
         :description="'耗时 '+calculateTimeDifferenceInSeconds(syncFriendPost.status.startTimestamp,syncFriendPost.status.completionTimestamp)+'秒'"
