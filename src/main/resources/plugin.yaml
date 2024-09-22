@@ -6,7 +6,7 @@ metadata:
     "store.halo.run/app-id": "app-yISsV"
 spec:
   enabled: true
-  requires: ">=2.17.0"
+  requires: ">=2.19.0"
   author:
     name: 困困鱼
     website: https://github.com/chengzhongxue

@@ -91,9 +91,10 @@ const mutate = async () => {
         cronFriendPost: formState.value
       });
     } else {
-      await friendsCoreApiClient.cron.createCronFriendPost({
+      const { data: createCronFriendPost } = await friendsCoreApiClient.cron.createCronFriendPost({
         cronFriendPost: formState.value
       });
+      formState.value = createCronFriendPost
     }
   } finally {
     saving.value = false;
@@ -103,7 +104,7 @@ const mutate = async () => {
 onMounted(async () => {
 
   const {data: data} = await friendsCoreApiClient.cron.listCronFriendPost();
-  let items = data.items;
+  const items = data.items;
   if (items?.length){
     formState.value = items[0]
   }
