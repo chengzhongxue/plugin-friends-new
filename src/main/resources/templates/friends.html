@@ -1511,7 +1511,7 @@
     <main>
         <section class="article-list">
             <article th:each="friend : ${friends.items}">
-                <h2><a th:href="${friend.spec.postLink}" th:text="${friend.spec.title}"></a></h2>
+                <h2><a th:href="${friend.spec.postLink}" target="_blank" th:text="${friend.spec.title}"></a></h2>
                 <div class="excerpt">
                     <p th:text="${friend.spec.description}"></p>
                 </div>
@@ -1522,7 +1522,7 @@
                                   th:text="${#dates.format(friend.spec.pubDate,'yyyy.MM.dd')}"></time>
                         </span>
                     <span class="item"><i class="iconfont icon-message"></i>
-                            <a th:href="${friend.spec.authorUrl}" th:text="${friend.spec.author}"></a>
+                            <a  th:href="${friend.spec.authorUrl}" target="_blank" th:text="${friend.spec.author}"></a>
                         </span>
                 </div>
             </article>
