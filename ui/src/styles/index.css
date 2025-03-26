@@ -1,0 +1,111 @@
+.thyuu-card p {
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 1em 0;
+}
+:is(.thyuu-card, .thyuu-card-menu, .thyuu-paginate) a {
+  color: inherit;
+  text-decoration: none;
+}
+.thyuu-card {
+  display: grid;
+  grid: auto / repeat(auto-fill, minmax(min(25em, 100%), 1fr));
+  gap: 1em;
+  margin: 1em 0;
+  width: 100%;
+}
+.thyuu-card.column {
+  grid: auto / auto;
+}
+.thyuu-card li {
+  display: flex;
+  justify-content: space-between;
+  align-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 1em;
+  gap: 1em;
+  margin: 0;
+  background-color: rgb(243 244 246 / var(--tw-bg-opacity));
+  border-radius: 1em;
+  overflow: hidden;
+}
+.thyuu-card.column li > * {
+  flex: 1;
+  min-width: min(20em, 100%);
+}
+.thyuu-card header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1em .5em;
+  width: 100%;
+}
+.thyuu-card header > *:last-child {
+  margin: 0 0 0 auto;
+  font-size: 12px;
+  opacity: .3;
+}
+.thyuu-card header span {
+  font-size: 14px;
+  color: #3c434a;
+}
+.thyuu-card article {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em .5em;
+}
+.thyuu-card article > * {
+  margin: 0;
+  display: -webkit-inline-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.thyuu-card article h4 {
+  color: #3c434a;
+  font-size: 14px;
+  font-weight: 600;
+}
+.thyuu-card footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .5em;
+  width: 100%;
+}
+.thyuu-card footer time {
+  flex: 1;
+  font-size: 12px;
+  opacity: .5;
+  margin: 0 auto 0 0;
+}
+.thyuu-card .button {
+  --btn-color: 200deg 60% 40%;
+  display: flex;
+  gap: .5em;
+  color: hsl(var(--btn-color));
+  border: 0;
+  font-size: 12px;
+  height: 2.5em;
+  min-height: 2.5em;
+  line-height: 1.5em;
+  padding: .5em 1em;
+  margin: 0;
+  transition: .3s;
+}
+.thyuu-card .button:hover {
+  color: white;
+  background: hsl(var(--btn-color, 200deg 60% 40%));
+}
+.thyuu-card .button.im {
+  --btn-color: 0deg 60% 40%;
+}
+.thyuu-card .button, .thyuu-card .button-secondary {
+  border-radius: 2em;
+  background: rgb(255 255 255 / var(--tw-bg-opacity));
+  vertical-align: top;
+}

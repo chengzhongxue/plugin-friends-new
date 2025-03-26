@@ -1,10 +1,11 @@
 package la.moony.friends.reconciler;
 
+import la.moony.friends.RssFeedSyncEvent;
 import la.moony.friends.extension.CronFriendPost;
-import la.moony.friends.service.FriendPostService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.convert.ApplicationConversionService;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.support.CronExpression;
 import org.springframework.stereotype.Component;
 import run.halo.app.extension.ExtensionClient;
@@ -22,13 +23,13 @@ public class CronCronFriendPostReconciler implements Reconciler<Reconciler.Reque
 
     private final ExtensionClient client;
     private Clock clock;
+    private final ApplicationEventPublisher eventPublisher;
 
-    private final FriendPostService friendPostService;
 
-
-    public CronCronFriendPostReconciler(ExtensionClient client, FriendPostService friendPostService) {
+    public CronCronFriendPostReconciler(ExtensionClient client,
+        ApplicationEventPublisher eventPublisher) {
         this.client = client;
-        this.friendPostService = friendPostService;
+        this.eventPublisher = eventPublisher;
         this.clock = Clock.systemDefaultZone();
     }
 
@@ -83,7 +84,7 @@ public class CronCronFriendPostReconciler implements Reconciler<Reconciler.Reque
                             } else {
 
 
-                                this.friendPostService.synchronizationFriend().subscribe();
+                                eventPublisher.publishEvent(new RssFeedSyncEvent(this, "cron-friends-default", "all"));
 
                                 ZonedDateTime zonedNow = now.atZone(zoneId);
                                 ZonedDateTime scheduleTimestamp = now.atZone(zoneId);

@@ -55,5 +55,5 @@ rules:
     resources: [ "friendposts","syncfriendposts","cronfriendposts"]
     verbs: [ "create", "patch", "update", "delete", "deletecollection" ]
   - apiGroups: [ "api.friend.moony.la" ]
-    resources: [ "friendposts"]
+    resources: [ "friendposts","syncrssfeed"]
     verbs: [ "create", "patch", "update", "delete", "deletecollection" ]

@@ -14,7 +14,6 @@ import { ToolboxItem } from "@halo-dev/richtext-editor";
 import MdiShare from "~icons/mdi/share";
 import BlockActionSeparator from "./BlockActionSeparator.vue";
 import MdiDeleteForeverOutline from "~icons/mdi/delete-forever-outline?color=red";
-import TablerBrandDouban from '~icons/tabler/brand-douban';
 import { deleteNode } from "../utils/delete-node";
 import LayoutGrid from "@/icon/layout-grid.vue";
 import LayoutList from "@/icon/layout-list.vue";

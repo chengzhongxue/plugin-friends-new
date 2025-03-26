@@ -19,8 +19,6 @@ import {friendsApiClient, friendsCoreApiClient} from "@/api";
 
 const queryClient = useQueryClient();
 
-const selectedFriendPosts = ref<string[]>([]);
-const checkedAll = ref(false);
 const selectedSort = useRouteQuery<string | undefined>("sort");
 const selectedLink = useRouteQuery<string | undefined>("author");
 
@@ -89,36 +87,18 @@ const {
 });
 
 
-const handleCheckAllChange = (e: Event) => {
-  const { checked } = e.target as HTMLInputElement;
-  checkedAll.value = checked;
-  if (checkedAll.value) {
-    selectedFriendPosts.value =
-      friendPosts.value?.map((friendPost) => {
-        return friendPost.metadata.name;
-      }) || [];
-  } else {
-    selectedFriendPosts.value.length = 0;
-  }
-};
-
-const handleDeleteInBatch = () => {
+const handleDelete = async (name: string) => {
   Dialog.warning({
-    title: "是否确认删除所选的订阅文章？",
+    title: "确定要删除该应用吗？",
     description: "删除之后将无法恢复。",
     confirmType: "danger",
+    confirmText: "确定",
+    cancelText: "取消",
     onConfirm: async () => {
       try {
-        const promises = selectedFriendPosts.value.map((friendPost) => {
-          return friendsCoreApiClient.friendPost.deleteFriendPost({
-            name: friendPost
-          });
-        });
-        if (promises) {
-          await Promise.all(promises);
-        }
-        selectedFriendPosts.value.length = 0;
-        checkedAll.value = false;
+        await friendsCoreApiClient.friendPost.deleteFriendPost({
+          name: name
+        })
 
         Toast.success("删除成功");
       } catch (e) {
@@ -129,6 +109,7 @@ const handleDeleteInBatch = () => {
     },
   });
 };
+
 function handleReset() {
   keyword.value = "";
   searchText.value = "";
@@ -141,20 +122,12 @@ function onKeywordChange() {
 
 <template>
 
-  <VCard :body-class="['!p-0']">
+  <VCard :body-class="['!p-0']" >
     <template #header>
       <div class="block w-full bg-gray-50 px-4 py-3">
         <div class="relative flex flex-col flex-wrap items-start gap-4 sm:flex-row sm:items-center" >
-          <div class="hidden items-center sm:flex" v-permission="['plugin:friends:manage']">
-            <input
-              v-model="checkedAll"
-              type="checkbox"
-              @change="handleCheckAllChange"
-            />
-          </div>
           <div class="flex w-full flex-1 items-center sm:w-auto" >
             <FormKit
-              v-if="!selectedFriendPosts.length"
               v-model="searchText"
               placeholder="输入关键词搜索"
               type="text"
@@ -172,11 +145,6 @@ function onKeywordChange() {
                 </div>
               </template>
             </FormKit>
-            <VSpace v-else v-permission="['plugin:friends:manage']">
-              <VButton type="danger" @click="handleDeleteInBatch">
-                删除
-              </VButton>
-            </VSpace>
           </div>
           <VSpace spacing="lg" class="flex-wrap">
               <FilterCleanButton
@@ -236,57 +204,35 @@ function onKeywordChange() {
     </Transition>
 
     <Transition v-else appear name="fade">
-      <div class="w-full relative overflow-x-auto">
-        <table class="w-full text-sm text-left text-gray-500">
-          <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-             <tr>
-               <th v-permission="['plugin:friends:manage']" 
-                   scope="col" class="px-4 py-3"><div class="w-max flex items-center"> </div></th>
-               <th scope="col" class="px-4 py-3"><div class="w-max flex items-center">作者名称 </div></th>
-               <th scope="col" class="px-4 py-3"><div class="w-max flex items-center">站点链接 </div></th>
-               <th scope="col" class="px-4 py-3"><div class="w-max flex items-center">文章标题 </div></th>
-               <th scope="col" class="px-4 py-3"><div class="w-max flex items-center">文章链接 </div></th>
-               <th scope="col" class="px-4 py-3"><div class="w-max flex items-center">文章内容 </div></th>
-               <th scope="col" class="px-4 py-3"><div class="w-max flex items-center">发布时间 </div></th>
-             </tr>
-          </thead>
-          <tbody>
-             <tr v-for="friendPost in friendPosts" class="border-b last:border-none hover:bg-gray-100">
-               <td class="px-4 py-4" 
-                   v-permission="['plugin:friends:manage']">
-                 <input
-                   v-model="selectedFriendPosts"
-                   :value="friendPost.metadata.name"
-                   class="h-4 w-4 rounded border-gray-300 text-indigo-600"
-                   name="post-checkbox"
-                   type="checkbox"
-                 />
-               </td>
-               <td  class="px-4 py-4 table-td">{{friendPost.spec.author}}</td>
-               <td class="px-4 py-4 table-td">
-                 <a
-                   :href="friendPost.spec.authorUrl"
-                   class="hover:text-gray-900"
-                   target="_blank"
-                 >
-                   {{ friendPost.spec.authorUrl }}
-                 </a>
-               </td>
-               <td class="px-4 py-4">{{friendPost.spec.title}}</td>
-               <td class="px-4 py-4 ant-link">
-                 <a
-                   :href="friendPost.spec.postLink"
-                   class="hover:text-gray-900"
-                   target="_blank"
-                 >
-                   {{friendPost.spec.postLink}}
-                 </a>
-               </td>
-               <td class="px-4 py-4 ant-td">{{friendPost.spec.description}}</td>
-               <td class="px-4 py-4 table-td">{{formatDatetime(friendPost.spec.pubDate)}}</td>
-             </tr>
-          </tbody>
-        </table>
+      <div class="m-0 md:m-4">
+        <ul class="thyuu-card">
+          <li v-for="friendPost in friendPosts">
+            <header>
+              <img alt="" :src="friendPost.spec.logo"
+                   class="avatar avatar-24 photo" height="24" width="24" loading="lazy" decoding="async">
+              <span>{{friendPost.spec.author}}</span>
+              <span></span>
+            </header>
+            <article>
+              <h4>
+                <a :href="friendPost.spec.postLink" target="_blank"
+                   rel="noopener noreferrer">
+                  {{friendPost.spec.title}}
+                </a>
+              </h4>
+              <p>{{friendPost.spec.description}}</p>
+            </article>
+            <footer>
+              <time>{{formatDatetime(friendPost.spec.pubDate)}} 发布</time>
+              <a :href="friendPost.spec.postLink" class="button icon-views" target="_blank"
+                 rel="noopener noreferrer">访问动态</a>
+              <HasPermission :permissions="['plugin:friends:manage']">
+                <a @click="handleDelete(friendPost.metadata.name)"
+                   class="button icon-del im cursor-pointer">删除</a>
+              </HasPermission>
+            </footer>
+          </li>
+        </ul>
       </div>
     </Transition>
 
@@ -301,38 +247,3 @@ function onKeywordChange() {
   </VCard>
   
 </template>
-
-<style scoped lang="scss">
-
-.table-td {
-  text-align: left !important;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.ant-link {
-  max-width: 250px;
-  border-bottom: 0;
-  text-align: left !important;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.ant-td {
-  max-width: 410px;
-  border-bottom: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  -webkit-line-clamp: 3;
-  display: -webkit-box;
-  overflow: hidden;
-  -webkit-box-orient: vertical;
-  padding-right: 1rem;
-  padding-bottom: 0rem;
-  margin-bottom: 1.1em;
-}
-
-
-</style>

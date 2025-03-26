@@ -2,7 +2,7 @@ package la.moony.friends;
 
 import la.moony.friends.extension.CronFriendPost;
 import la.moony.friends.extension.FriendPost;
-import la.moony.friends.extension.SyncFriendPost;
+import la.moony.friends.extension.RssFeedSyncLog;
 import org.springframework.stereotype.Component;
 import run.halo.app.extension.Scheme;
 import run.halo.app.extension.SchemeManager;
@@ -57,11 +57,13 @@ public class FriendsPlugin extends BasePlugin {
                 }))
             );
         });
-        schemeManager.register(SyncFriendPost.class, indexSpecs -> {
+        schemeManager.register(RssFeedSyncLog.class, indexSpecs -> {
             indexSpecs.add(new IndexSpec()
-                .setName("spec.linkName")
-                .setIndexFunc(
-                    simpleAttribute(SyncFriendPost.class, syncFriendPost -> syncFriendPost.getSpec().getLinkName())));
+                .setName("state")
+                .setIndexFunc(simpleAttribute(RssFeedSyncLog.class, rssFeedSyncLog -> {
+                    var state = rssFeedSyncLog.getState();
+                    return state == null ? null : state.name();
+                })));
         });
         schemeManager.register(CronFriendPost.class);
     }
@@ -70,7 +72,7 @@ public class FriendsPlugin extends BasePlugin {
     public void stop() {
         schemeManager.unregister(Scheme.buildFromType(FriendPost.class));
         schemeManager.unregister(Scheme.buildFromType(CronFriendPost.class));
-        schemeManager.unregister(Scheme.buildFromType(SyncFriendPost.class));
+        schemeManager.unregister(Scheme.buildFromType(RssFeedSyncLog.class));
 
     }
 }

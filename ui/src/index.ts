@@ -1,3 +1,4 @@
+import "./styles/index.css";
 import { definePlugin } from "@halo-dev/console-shared";
 import Friend from "./views/Friend.vue";
 import RiBloggerLine from '~icons/ri/blogger-line';

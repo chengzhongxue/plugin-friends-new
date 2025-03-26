@@ -1,9 +1,7 @@
 <script lang="ts" setup>
-import type { PMNode } from "@halo-dev/richtext-editor";
-import type { Editor, Node } from "@halo-dev/richtext-editor";
+import type {NodeViewProps, PMNode} from "@halo-dev/richtext-editor";
 import { NodeViewWrapper } from "@halo-dev/richtext-editor";
 import { computed, onMounted, ref, watch } from "vue";
-import {formatDatetime} from "@/utils/date";
 import { VButton,VSpace,VDropdown,VEmpty} from "@halo-dev/components";
 import { friendsApiClient } from "@/api";
 import type { RssDetail } from "@/api/generated";
@@ -11,15 +9,7 @@ import type { FriendsRss } from '@kunkunyu/fridends-rss';
 
 const selecteRssDetail = ref<RssDetail | undefined>();
 
-const props = defineProps<{
-  editor: Editor;
-  node: PMNode;
-  selected: boolean;
-  extension: Node<any, any>;
-  getPos: () => number;
-  updateAttributes: (attributes: Record<string, any>) => void;
-  deleteNode: () => void;
-}>();
+const props = defineProps<NodeViewProps>();
 
 const rssRef = ref<InstanceType<typeof FriendsRss> | null>();
 
@@ -126,11 +116,6 @@ const handleResetInit = () => {
           :src="src"
           :layout="layout"
         ></friends-rss>
-<!--        <ul class="block-rss" :class="{ 'is-grid columns-2': layout == 'grid' }">-->
-<!--          <li class="block-rss__item" v-for="(item, index) in selecteRssDetail?.channel.items" :key="index">-->
-<!--            <div class="block-rss__item-title"><a :href="item.link">{{item.title}}</a></div>-->
-<!--          </li>-->
-<!--        </ul>-->
       </div>
     </div>
   </node-view-wrapper>

@@ -7,6 +7,8 @@ metadata:
 spec:
   enabled: true
   requires: ">=2.19.0"
+  pluginDependencies:
+    "PluginLinks": ">=1.5.0"
   author:
     name: 困困鱼
     website: https://github.com/chengzhongxue
