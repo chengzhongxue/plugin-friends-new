@@ -24,10 +24,8 @@ public class RssFeedSyncLog extends AbstractExtension {
     @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
     private Instant syncTime;
 
-    @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
     private String failureReason;
 
-    @Schema(requiredMode = Schema.RequiredMode.REQUIRED)
     private String failureMessage;
 
     public enum RssFeedSyncLogState {

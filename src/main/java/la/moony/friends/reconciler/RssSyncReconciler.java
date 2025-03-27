@@ -71,7 +71,8 @@ public class RssSyncReconciler implements Reconciler<RssSyncReconciler.Request>,
         Optional<CronFriendPost> cronFriendPost = client.fetch(CronFriendPost.class, request.name());
         int sum = 5;
         if (cronFriendPost.isPresent()) {
-            sum = cronFriendPost.get().getSpec().getSuccessfulRetainLimit();
+            int successfulRetainLimit = cronFriendPost.get().getSpec().getSuccessfulRetainLimit();
+            sum = successfulRetainLimit == 0 ? 5 : successfulRetainLimit;
         }
         var listOptions = new ListOptions();
         FieldSelector fieldSelector = FieldSelector.of(all());
@@ -93,7 +94,7 @@ public class RssSyncReconciler implements Reconciler<RssSyncReconciler.Request>,
                 String syncLogName = "sync-log-" + linkName;
                 RssFeedSyncLog newRssFeedSyncLog = new RssFeedSyncLog();
                 Metadata metadata = new Metadata();
-                metadata.setGenerateName(syncLogName);
+                metadata.setName(syncLogName);
                 newRssFeedSyncLog.setMetadata(metadata);
                 newRssFeedSyncLog.setLinkName(linkName);
                 if (StringUtils.isNotEmpty(rssUri) && !isContains) {
