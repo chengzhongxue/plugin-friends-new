@@ -16,7 +16,6 @@ import reactor.core.publisher.Mono;
 import run.halo.app.extension.*;
 import run.halo.app.extension.router.selector.FieldSelector;
 import run.halo.app.theme.finders.Finder;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;

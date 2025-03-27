@@ -44,8 +44,7 @@ import static run.halo.app.extension.index.query.QueryFactory.all;
 import static run.halo.app.extension.index.query.QueryFactory.equal;
 
 @Component
-public class RssSyncReconciler implements Reconciler<RssSyncReconciler.Request>,
-    SmartLifecycle {
+public class RssSyncReconciler implements Reconciler<RssSyncReconciler.Request>,SmartLifecycle {
 
     private static final Logger log = LoggerFactory.getLogger(RssSyncReconciler.class);
 

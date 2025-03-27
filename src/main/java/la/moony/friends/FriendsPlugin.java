@@ -57,6 +57,7 @@ public class FriendsPlugin extends BasePlugin {
                 }))
             );
         });
+        schemeManager.register(CronFriendPost.class);
         schemeManager.register(RssFeedSyncLog.class, indexSpecs -> {
             indexSpecs.add(new IndexSpec()
                 .setName("state")
@@ -65,7 +66,7 @@ public class FriendsPlugin extends BasePlugin {
                     return state == null ? null : state.name();
                 })));
         });
-        schemeManager.register(CronFriendPost.class);
+
     }
 
     @Override
