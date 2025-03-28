@@ -24,23 +24,23 @@ import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError
 // @ts-ignore
 import type { JsonPatchInner } from '../models';
 // @ts-ignore
-import type { SyncFriendPost } from '../models';
+import type { RssFeedSyncLog } from '../models';
 // @ts-ignore
-import type { SyncFriendPostList } from '../models';
+import type { RssFeedSyncLogList } from '../models';
 /**
- * SyncFriendPostV1alpha1Api - axios parameter creator
+ * RssFeedSyncLogV1alpha1Api - axios parameter creator
  * @export
  */
-export const SyncFriendPostV1alpha1ApiAxiosParamCreator = function (configuration?: Configuration) {
+export const RssFeedSyncLogV1alpha1ApiAxiosParamCreator = function (configuration?: Configuration) {
     return {
         /**
-         * Create SyncFriendPost
-         * @param {SyncFriendPost} [syncFriendPost] Fresh syncfriendpost
+         * Create RssFeedSyncLog
+         * @param {RssFeedSyncLog} [rssFeedSyncLog] Fresh syncfriendpost
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createSyncFriendPost: async (syncFriendPost?: SyncFriendPost, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/apis/friend.moony.la/v1alpha1/syncfriendposts`;
+        createRssFeedSyncLog: async (rssFeedSyncLog?: RssFeedSyncLog, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/apis/friend.moony.la/v1alpha1/rssfeedsynclogs`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -67,7 +67,7 @@ export const SyncFriendPostV1alpha1ApiAxiosParamCreator = function (configuratio
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(syncFriendPost, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(rssFeedSyncLog, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -75,15 +75,15 @@ export const SyncFriendPostV1alpha1ApiAxiosParamCreator = function (configuratio
             };
         },
         /**
-         * Delete SyncFriendPost
+         * Delete RssFeedSyncLog
          * @param {string} name Name of syncfriendpost
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteSyncFriendPost: async (name: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        deleteRssFeedSyncLog: async (name: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'name' is not null or undefined
-            assertParamExists('deleteSyncFriendPost', 'name', name)
-            const localVarPath = `/apis/friend.moony.la/v1alpha1/syncfriendposts/{name}`
+            assertParamExists('deleteRssFeedSyncLog', 'name', name)
+            const localVarPath = `/apis/friend.moony.la/v1alpha1/rssfeedsynclogs/{name}`
                 .replace(`{${"name"}}`, encodeURIComponent(String(name)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -116,15 +116,15 @@ export const SyncFriendPostV1alpha1ApiAxiosParamCreator = function (configuratio
             };
         },
         /**
-         * Get SyncFriendPost
+         * Get RssFeedSyncLog
          * @param {string} name Name of syncfriendpost
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getSyncFriendPost: async (name: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getRssFeedSyncLog: async (name: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'name' is not null or undefined
-            assertParamExists('getSyncFriendPost', 'name', name)
-            const localVarPath = `/apis/friend.moony.la/v1alpha1/syncfriendposts/{name}`
+            assertParamExists('getRssFeedSyncLog', 'name', name)
+            const localVarPath = `/apis/friend.moony.la/v1alpha1/rssfeedsynclogs/{name}`
                 .replace(`{${"name"}}`, encodeURIComponent(String(name)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -157,7 +157,7 @@ export const SyncFriendPostV1alpha1ApiAxiosParamCreator = function (configuratio
             };
         },
         /**
-         * List SyncFriendPost
+         * List RssFeedSyncLog
          * @param {number} [page] Page number. Default is 0.
          * @param {number} [size] Size number. Default is 0.
          * @param {Array<string>} [labelSelector] Label selector. e.g.: hidden!&#x3D;true
@@ -166,8 +166,8 @@ export const SyncFriendPostV1alpha1ApiAxiosParamCreator = function (configuratio
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listSyncFriendPost: async (page?: number, size?: number, labelSelector?: Array<string>, fieldSelector?: Array<string>, sort?: Array<string>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/apis/friend.moony.la/v1alpha1/syncfriendposts`;
+        listRssFeedSyncLog: async (page?: number, size?: number, labelSelector?: Array<string>, fieldSelector?: Array<string>, sort?: Array<string>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/apis/friend.moony.la/v1alpha1/rssfeedsynclogs`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -219,16 +219,16 @@ export const SyncFriendPostV1alpha1ApiAxiosParamCreator = function (configuratio
             };
         },
         /**
-         * Patch SyncFriendPost
+         * Patch RssFeedSyncLog
          * @param {string} name Name of syncfriendpost
          * @param {Array<JsonPatchInner>} [jsonPatchInner] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        patchSyncFriendPost: async (name: string, jsonPatchInner?: Array<JsonPatchInner>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        patchRssFeedSyncLog: async (name: string, jsonPatchInner?: Array<JsonPatchInner>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'name' is not null or undefined
-            assertParamExists('patchSyncFriendPost', 'name', name)
-            const localVarPath = `/apis/friend.moony.la/v1alpha1/syncfriendposts/{name}`
+            assertParamExists('patchRssFeedSyncLog', 'name', name)
+            const localVarPath = `/apis/friend.moony.la/v1alpha1/rssfeedsynclogs/{name}`
                 .replace(`{${"name"}}`, encodeURIComponent(String(name)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -264,16 +264,16 @@ export const SyncFriendPostV1alpha1ApiAxiosParamCreator = function (configuratio
             };
         },
         /**
-         * Update SyncFriendPost
+         * Update RssFeedSyncLog
          * @param {string} name Name of syncfriendpost
-         * @param {SyncFriendPost} [syncFriendPost] Updated syncfriendpost
+         * @param {RssFeedSyncLog} [rssFeedSyncLog] Updated syncfriendpost
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateSyncFriendPost: async (name: string, syncFriendPost?: SyncFriendPost, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        updateRssFeedSyncLog: async (name: string, rssFeedSyncLog?: RssFeedSyncLog, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'name' is not null or undefined
-            assertParamExists('updateSyncFriendPost', 'name', name)
-            const localVarPath = `/apis/friend.moony.la/v1alpha1/syncfriendposts/{name}`
+            assertParamExists('updateRssFeedSyncLog', 'name', name)
+            const localVarPath = `/apis/friend.moony.la/v1alpha1/rssfeedsynclogs/{name}`
                 .replace(`{${"name"}}`, encodeURIComponent(String(name)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -301,7 +301,7 @@ export const SyncFriendPostV1alpha1ApiAxiosParamCreator = function (configuratio
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(syncFriendPost, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(rssFeedSyncLog, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -312,50 +312,50 @@ export const SyncFriendPostV1alpha1ApiAxiosParamCreator = function (configuratio
 };
 
 /**
- * SyncFriendPostV1alpha1Api - functional programming interface
+ * RssFeedSyncLogV1alpha1Api - functional programming interface
  * @export
  */
-export const SyncFriendPostV1alpha1ApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = SyncFriendPostV1alpha1ApiAxiosParamCreator(configuration)
+export const RssFeedSyncLogV1alpha1ApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = RssFeedSyncLogV1alpha1ApiAxiosParamCreator(configuration)
     return {
         /**
-         * Create SyncFriendPost
-         * @param {SyncFriendPost} [syncFriendPost] Fresh syncfriendpost
+         * Create RssFeedSyncLog
+         * @param {RssFeedSyncLog} [rssFeedSyncLog] Fresh syncfriendpost
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createSyncFriendPost(syncFriendPost?: SyncFriendPost, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SyncFriendPost>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createSyncFriendPost(syncFriendPost, options);
+        async createRssFeedSyncLog(rssFeedSyncLog?: RssFeedSyncLog, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RssFeedSyncLog>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createRssFeedSyncLog(rssFeedSyncLog, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['SyncFriendPostV1alpha1Api.createSyncFriendPost']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RssFeedSyncLogV1alpha1Api.createRssFeedSyncLog']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * Delete SyncFriendPost
+         * Delete RssFeedSyncLog
          * @param {string} name Name of syncfriendpost
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deleteSyncFriendPost(name: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteSyncFriendPost(name, options);
+        async deleteRssFeedSyncLog(name: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteRssFeedSyncLog(name, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['SyncFriendPostV1alpha1Api.deleteSyncFriendPost']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RssFeedSyncLogV1alpha1Api.deleteRssFeedSyncLog']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * Get SyncFriendPost
+         * Get RssFeedSyncLog
          * @param {string} name Name of syncfriendpost
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getSyncFriendPost(name: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SyncFriendPost>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getSyncFriendPost(name, options);
+        async getRssFeedSyncLog(name: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RssFeedSyncLog>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getRssFeedSyncLog(name, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['SyncFriendPostV1alpha1Api.getSyncFriendPost']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RssFeedSyncLogV1alpha1Api.getRssFeedSyncLog']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * List SyncFriendPost
+         * List RssFeedSyncLog
          * @param {number} [page] Page number. Default is 0.
          * @param {number} [size] Size number. Default is 0.
          * @param {Array<string>} [labelSelector] Label selector. e.g.: hidden!&#x3D;true
@@ -364,302 +364,302 @@ export const SyncFriendPostV1alpha1ApiFp = function(configuration?: Configuratio
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listSyncFriendPost(page?: number, size?: number, labelSelector?: Array<string>, fieldSelector?: Array<string>, sort?: Array<string>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SyncFriendPostList>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listSyncFriendPost(page, size, labelSelector, fieldSelector, sort, options);
+        async listRssFeedSyncLog(page?: number, size?: number, labelSelector?: Array<string>, fieldSelector?: Array<string>, sort?: Array<string>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RssFeedSyncLogList>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listRssFeedSyncLog(page, size, labelSelector, fieldSelector, sort, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['SyncFriendPostV1alpha1Api.listSyncFriendPost']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RssFeedSyncLogV1alpha1Api.listRssFeedSyncLog']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * Patch SyncFriendPost
+         * Patch RssFeedSyncLog
          * @param {string} name Name of syncfriendpost
          * @param {Array<JsonPatchInner>} [jsonPatchInner] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async patchSyncFriendPost(name: string, jsonPatchInner?: Array<JsonPatchInner>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SyncFriendPost>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.patchSyncFriendPost(name, jsonPatchInner, options);
+        async patchRssFeedSyncLog(name: string, jsonPatchInner?: Array<JsonPatchInner>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RssFeedSyncLog>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.patchRssFeedSyncLog(name, jsonPatchInner, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['SyncFriendPostV1alpha1Api.patchSyncFriendPost']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RssFeedSyncLogV1alpha1Api.patchRssFeedSyncLog']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * Update SyncFriendPost
+         * Update RssFeedSyncLog
          * @param {string} name Name of syncfriendpost
-         * @param {SyncFriendPost} [syncFriendPost] Updated syncfriendpost
+         * @param {RssFeedSyncLog} [rssFeedSyncLog] Updated syncfriendpost
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updateSyncFriendPost(name: string, syncFriendPost?: SyncFriendPost, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SyncFriendPost>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.updateSyncFriendPost(name, syncFriendPost, options);
+        async updateRssFeedSyncLog(name: string, rssFeedSyncLog?: RssFeedSyncLog, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RssFeedSyncLog>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateRssFeedSyncLog(name, rssFeedSyncLog, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['SyncFriendPostV1alpha1Api.updateSyncFriendPost']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['RssFeedSyncLogV1alpha1Api.updateRssFeedSyncLog']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
 };
 
 /**
- * SyncFriendPostV1alpha1Api - factory interface
+ * RssFeedSyncLogV1alpha1Api - factory interface
  * @export
  */
-export const SyncFriendPostV1alpha1ApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = SyncFriendPostV1alpha1ApiFp(configuration)
+export const RssFeedSyncLogV1alpha1ApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = RssFeedSyncLogV1alpha1ApiFp(configuration)
     return {
         /**
-         * Create SyncFriendPost
-         * @param {SyncFriendPostV1alpha1ApiCreateSyncFriendPostRequest} requestParameters Request parameters.
+         * Create RssFeedSyncLog
+         * @param {RssFeedSyncLogV1alpha1ApiCreateRssFeedSyncLogRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createSyncFriendPost(requestParameters: SyncFriendPostV1alpha1ApiCreateSyncFriendPostRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<SyncFriendPost> {
-            return localVarFp.createSyncFriendPost(requestParameters.syncFriendPost, options).then((request) => request(axios, basePath));
+        createRssFeedSyncLog(requestParameters: RssFeedSyncLogV1alpha1ApiCreateRssFeedSyncLogRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<RssFeedSyncLog> {
+            return localVarFp.createRssFeedSyncLog(requestParameters.rssFeedSyncLog, options).then((request) => request(axios, basePath));
         },
         /**
-         * Delete SyncFriendPost
-         * @param {SyncFriendPostV1alpha1ApiDeleteSyncFriendPostRequest} requestParameters Request parameters.
+         * Delete RssFeedSyncLog
+         * @param {RssFeedSyncLogV1alpha1ApiDeleteRssFeedSyncLogRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteSyncFriendPost(requestParameters: SyncFriendPostV1alpha1ApiDeleteSyncFriendPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.deleteSyncFriendPost(requestParameters.name, options).then((request) => request(axios, basePath));
+        deleteRssFeedSyncLog(requestParameters: RssFeedSyncLogV1alpha1ApiDeleteRssFeedSyncLogRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.deleteRssFeedSyncLog(requestParameters.name, options).then((request) => request(axios, basePath));
         },
         /**
-         * Get SyncFriendPost
-         * @param {SyncFriendPostV1alpha1ApiGetSyncFriendPostRequest} requestParameters Request parameters.
+         * Get RssFeedSyncLog
+         * @param {RssFeedSyncLogV1alpha1ApiGetRssFeedSyncLogRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getSyncFriendPost(requestParameters: SyncFriendPostV1alpha1ApiGetSyncFriendPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<SyncFriendPost> {
-            return localVarFp.getSyncFriendPost(requestParameters.name, options).then((request) => request(axios, basePath));
+        getRssFeedSyncLog(requestParameters: RssFeedSyncLogV1alpha1ApiGetRssFeedSyncLogRequest, options?: RawAxiosRequestConfig): AxiosPromise<RssFeedSyncLog> {
+            return localVarFp.getRssFeedSyncLog(requestParameters.name, options).then((request) => request(axios, basePath));
         },
         /**
-         * List SyncFriendPost
-         * @param {SyncFriendPostV1alpha1ApiListSyncFriendPostRequest} requestParameters Request parameters.
+         * List RssFeedSyncLog
+         * @param {RssFeedSyncLogV1alpha1ApiListRssFeedSyncLogRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listSyncFriendPost(requestParameters: SyncFriendPostV1alpha1ApiListSyncFriendPostRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<SyncFriendPostList> {
-            return localVarFp.listSyncFriendPost(requestParameters.page, requestParameters.size, requestParameters.labelSelector, requestParameters.fieldSelector, requestParameters.sort, options).then((request) => request(axios, basePath));
+        listRssFeedSyncLog(requestParameters: RssFeedSyncLogV1alpha1ApiListRssFeedSyncLogRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<RssFeedSyncLogList> {
+            return localVarFp.listRssFeedSyncLog(requestParameters.page, requestParameters.size, requestParameters.labelSelector, requestParameters.fieldSelector, requestParameters.sort, options).then((request) => request(axios, basePath));
         },
         /**
-         * Patch SyncFriendPost
-         * @param {SyncFriendPostV1alpha1ApiPatchSyncFriendPostRequest} requestParameters Request parameters.
+         * Patch RssFeedSyncLog
+         * @param {RssFeedSyncLogV1alpha1ApiPatchRssFeedSyncLogRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        patchSyncFriendPost(requestParameters: SyncFriendPostV1alpha1ApiPatchSyncFriendPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<SyncFriendPost> {
-            return localVarFp.patchSyncFriendPost(requestParameters.name, requestParameters.jsonPatchInner, options).then((request) => request(axios, basePath));
+        patchRssFeedSyncLog(requestParameters: RssFeedSyncLogV1alpha1ApiPatchRssFeedSyncLogRequest, options?: RawAxiosRequestConfig): AxiosPromise<RssFeedSyncLog> {
+            return localVarFp.patchRssFeedSyncLog(requestParameters.name, requestParameters.jsonPatchInner, options).then((request) => request(axios, basePath));
         },
         /**
-         * Update SyncFriendPost
-         * @param {SyncFriendPostV1alpha1ApiUpdateSyncFriendPostRequest} requestParameters Request parameters.
+         * Update RssFeedSyncLog
+         * @param {RssFeedSyncLogV1alpha1ApiUpdateRssFeedSyncLogRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updateSyncFriendPost(requestParameters: SyncFriendPostV1alpha1ApiUpdateSyncFriendPostRequest, options?: RawAxiosRequestConfig): AxiosPromise<SyncFriendPost> {
-            return localVarFp.updateSyncFriendPost(requestParameters.name, requestParameters.syncFriendPost, options).then((request) => request(axios, basePath));
+        updateRssFeedSyncLog(requestParameters: RssFeedSyncLogV1alpha1ApiUpdateRssFeedSyncLogRequest, options?: RawAxiosRequestConfig): AxiosPromise<RssFeedSyncLog> {
+            return localVarFp.updateRssFeedSyncLog(requestParameters.name, requestParameters.rssFeedSyncLog, options).then((request) => request(axios, basePath));
         },
     };
 };
 
 /**
- * Request parameters for createSyncFriendPost operation in SyncFriendPostV1alpha1Api.
+ * Request parameters for createRssFeedSyncLog operation in RssFeedSyncLogV1alpha1Api.
  * @export
- * @interface SyncFriendPostV1alpha1ApiCreateSyncFriendPostRequest
+ * @interface RssFeedSyncLogV1alpha1ApiCreateRssFeedSyncLogRequest
  */
-export interface SyncFriendPostV1alpha1ApiCreateSyncFriendPostRequest {
+export interface RssFeedSyncLogV1alpha1ApiCreateRssFeedSyncLogRequest {
     /**
      * Fresh syncfriendpost
-     * @type {SyncFriendPost}
-     * @memberof SyncFriendPostV1alpha1ApiCreateSyncFriendPost
+     * @type {RssFeedSyncLog}
+     * @memberof RssFeedSyncLogV1alpha1ApiCreateRssFeedSyncLog
      */
-    readonly syncFriendPost?: SyncFriendPost
+    readonly rssFeedSyncLog?: RssFeedSyncLog
 }
 
 /**
- * Request parameters for deleteSyncFriendPost operation in SyncFriendPostV1alpha1Api.
+ * Request parameters for deleteRssFeedSyncLog operation in RssFeedSyncLogV1alpha1Api.
  * @export
- * @interface SyncFriendPostV1alpha1ApiDeleteSyncFriendPostRequest
+ * @interface RssFeedSyncLogV1alpha1ApiDeleteRssFeedSyncLogRequest
  */
-export interface SyncFriendPostV1alpha1ApiDeleteSyncFriendPostRequest {
+export interface RssFeedSyncLogV1alpha1ApiDeleteRssFeedSyncLogRequest {
     /**
      * Name of syncfriendpost
      * @type {string}
-     * @memberof SyncFriendPostV1alpha1ApiDeleteSyncFriendPost
+     * @memberof RssFeedSyncLogV1alpha1ApiDeleteRssFeedSyncLog
      */
     readonly name: string
 }
 
 /**
- * Request parameters for getSyncFriendPost operation in SyncFriendPostV1alpha1Api.
+ * Request parameters for getRssFeedSyncLog operation in RssFeedSyncLogV1alpha1Api.
  * @export
- * @interface SyncFriendPostV1alpha1ApiGetSyncFriendPostRequest
+ * @interface RssFeedSyncLogV1alpha1ApiGetRssFeedSyncLogRequest
  */
-export interface SyncFriendPostV1alpha1ApiGetSyncFriendPostRequest {
+export interface RssFeedSyncLogV1alpha1ApiGetRssFeedSyncLogRequest {
     /**
      * Name of syncfriendpost
      * @type {string}
-     * @memberof SyncFriendPostV1alpha1ApiGetSyncFriendPost
+     * @memberof RssFeedSyncLogV1alpha1ApiGetRssFeedSyncLog
      */
     readonly name: string
 }
 
 /**
- * Request parameters for listSyncFriendPost operation in SyncFriendPostV1alpha1Api.
+ * Request parameters for listRssFeedSyncLog operation in RssFeedSyncLogV1alpha1Api.
  * @export
- * @interface SyncFriendPostV1alpha1ApiListSyncFriendPostRequest
+ * @interface RssFeedSyncLogV1alpha1ApiListRssFeedSyncLogRequest
  */
-export interface SyncFriendPostV1alpha1ApiListSyncFriendPostRequest {
+export interface RssFeedSyncLogV1alpha1ApiListRssFeedSyncLogRequest {
     /**
      * Page number. Default is 0.
      * @type {number}
-     * @memberof SyncFriendPostV1alpha1ApiListSyncFriendPost
+     * @memberof RssFeedSyncLogV1alpha1ApiListRssFeedSyncLog
      */
     readonly page?: number
 
     /**
      * Size number. Default is 0.
      * @type {number}
-     * @memberof SyncFriendPostV1alpha1ApiListSyncFriendPost
+     * @memberof RssFeedSyncLogV1alpha1ApiListRssFeedSyncLog
      */
     readonly size?: number
 
     /**
      * Label selector. e.g.: hidden!&#x3D;true
      * @type {Array<string>}
-     * @memberof SyncFriendPostV1alpha1ApiListSyncFriendPost
+     * @memberof RssFeedSyncLogV1alpha1ApiListRssFeedSyncLog
      */
     readonly labelSelector?: Array<string>
 
     /**
      * Field selector. e.g.: metadata.name&#x3D;&#x3D;halo
      * @type {Array<string>}
-     * @memberof SyncFriendPostV1alpha1ApiListSyncFriendPost
+     * @memberof RssFeedSyncLogV1alpha1ApiListRssFeedSyncLog
      */
     readonly fieldSelector?: Array<string>
 
     /**
      * Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
      * @type {Array<string>}
-     * @memberof SyncFriendPostV1alpha1ApiListSyncFriendPost
+     * @memberof RssFeedSyncLogV1alpha1ApiListRssFeedSyncLog
      */
     readonly sort?: Array<string>
 }
 
 /**
- * Request parameters for patchSyncFriendPost operation in SyncFriendPostV1alpha1Api.
+ * Request parameters for patchRssFeedSyncLog operation in RssFeedSyncLogV1alpha1Api.
  * @export
- * @interface SyncFriendPostV1alpha1ApiPatchSyncFriendPostRequest
+ * @interface RssFeedSyncLogV1alpha1ApiPatchRssFeedSyncLogRequest
  */
-export interface SyncFriendPostV1alpha1ApiPatchSyncFriendPostRequest {
+export interface RssFeedSyncLogV1alpha1ApiPatchRssFeedSyncLogRequest {
     /**
      * Name of syncfriendpost
      * @type {string}
-     * @memberof SyncFriendPostV1alpha1ApiPatchSyncFriendPost
+     * @memberof RssFeedSyncLogV1alpha1ApiPatchRssFeedSyncLog
      */
     readonly name: string
 
     /**
      * 
      * @type {Array<JsonPatchInner>}
-     * @memberof SyncFriendPostV1alpha1ApiPatchSyncFriendPost
+     * @memberof RssFeedSyncLogV1alpha1ApiPatchRssFeedSyncLog
      */
     readonly jsonPatchInner?: Array<JsonPatchInner>
 }
 
 /**
- * Request parameters for updateSyncFriendPost operation in SyncFriendPostV1alpha1Api.
+ * Request parameters for updateRssFeedSyncLog operation in RssFeedSyncLogV1alpha1Api.
  * @export
- * @interface SyncFriendPostV1alpha1ApiUpdateSyncFriendPostRequest
+ * @interface RssFeedSyncLogV1alpha1ApiUpdateRssFeedSyncLogRequest
  */
-export interface SyncFriendPostV1alpha1ApiUpdateSyncFriendPostRequest {
+export interface RssFeedSyncLogV1alpha1ApiUpdateRssFeedSyncLogRequest {
     /**
      * Name of syncfriendpost
      * @type {string}
-     * @memberof SyncFriendPostV1alpha1ApiUpdateSyncFriendPost
+     * @memberof RssFeedSyncLogV1alpha1ApiUpdateRssFeedSyncLog
      */
     readonly name: string
 
     /**
      * Updated syncfriendpost
-     * @type {SyncFriendPost}
-     * @memberof SyncFriendPostV1alpha1ApiUpdateSyncFriendPost
+     * @type {RssFeedSyncLog}
+     * @memberof RssFeedSyncLogV1alpha1ApiUpdateRssFeedSyncLog
      */
-    readonly syncFriendPost?: SyncFriendPost
+    readonly rssFeedSyncLog?: RssFeedSyncLog
 }
 
 /**
- * SyncFriendPostV1alpha1Api - object-oriented interface
+ * RssFeedSyncLogV1alpha1Api - object-oriented interface
  * @export
- * @class SyncFriendPostV1alpha1Api
+ * @class RssFeedSyncLogV1alpha1Api
  * @extends {BaseAPI}
  */
-export class SyncFriendPostV1alpha1Api extends BaseAPI {
+export class RssFeedSyncLogV1alpha1Api extends BaseAPI {
     /**
-     * Create SyncFriendPost
-     * @param {SyncFriendPostV1alpha1ApiCreateSyncFriendPostRequest} requestParameters Request parameters.
+     * Create RssFeedSyncLog
+     * @param {RssFeedSyncLogV1alpha1ApiCreateRssFeedSyncLogRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof SyncFriendPostV1alpha1Api
+     * @memberof RssFeedSyncLogV1alpha1Api
      */
-    public createSyncFriendPost(requestParameters: SyncFriendPostV1alpha1ApiCreateSyncFriendPostRequest = {}, options?: RawAxiosRequestConfig) {
-        return SyncFriendPostV1alpha1ApiFp(this.configuration).createSyncFriendPost(requestParameters.syncFriendPost, options).then((request) => request(this.axios, this.basePath));
+    public createRssFeedSyncLog(requestParameters: RssFeedSyncLogV1alpha1ApiCreateRssFeedSyncLogRequest = {}, options?: RawAxiosRequestConfig) {
+        return RssFeedSyncLogV1alpha1ApiFp(this.configuration).createRssFeedSyncLog(requestParameters.rssFeedSyncLog, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * Delete SyncFriendPost
-     * @param {SyncFriendPostV1alpha1ApiDeleteSyncFriendPostRequest} requestParameters Request parameters.
+     * Delete RssFeedSyncLog
+     * @param {RssFeedSyncLogV1alpha1ApiDeleteRssFeedSyncLogRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof SyncFriendPostV1alpha1Api
+     * @memberof RssFeedSyncLogV1alpha1Api
      */
-    public deleteSyncFriendPost(requestParameters: SyncFriendPostV1alpha1ApiDeleteSyncFriendPostRequest, options?: RawAxiosRequestConfig) {
-        return SyncFriendPostV1alpha1ApiFp(this.configuration).deleteSyncFriendPost(requestParameters.name, options).then((request) => request(this.axios, this.basePath));
+    public deleteRssFeedSyncLog(requestParameters: RssFeedSyncLogV1alpha1ApiDeleteRssFeedSyncLogRequest, options?: RawAxiosRequestConfig) {
+        return RssFeedSyncLogV1alpha1ApiFp(this.configuration).deleteRssFeedSyncLog(requestParameters.name, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * Get SyncFriendPost
-     * @param {SyncFriendPostV1alpha1ApiGetSyncFriendPostRequest} requestParameters Request parameters.
+     * Get RssFeedSyncLog
+     * @param {RssFeedSyncLogV1alpha1ApiGetRssFeedSyncLogRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof SyncFriendPostV1alpha1Api
+     * @memberof RssFeedSyncLogV1alpha1Api
      */
-    public getSyncFriendPost(requestParameters: SyncFriendPostV1alpha1ApiGetSyncFriendPostRequest, options?: RawAxiosRequestConfig) {
-        return SyncFriendPostV1alpha1ApiFp(this.configuration).getSyncFriendPost(requestParameters.name, options).then((request) => request(this.axios, this.basePath));
+    public getRssFeedSyncLog(requestParameters: RssFeedSyncLogV1alpha1ApiGetRssFeedSyncLogRequest, options?: RawAxiosRequestConfig) {
+        return RssFeedSyncLogV1alpha1ApiFp(this.configuration).getRssFeedSyncLog(requestParameters.name, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * List SyncFriendPost
-     * @param {SyncFriendPostV1alpha1ApiListSyncFriendPostRequest} requestParameters Request parameters.
+     * List RssFeedSyncLog
+     * @param {RssFeedSyncLogV1alpha1ApiListRssFeedSyncLogRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof SyncFriendPostV1alpha1Api
+     * @memberof RssFeedSyncLogV1alpha1Api
      */
-    public listSyncFriendPost(requestParameters: SyncFriendPostV1alpha1ApiListSyncFriendPostRequest = {}, options?: RawAxiosRequestConfig) {
-        return SyncFriendPostV1alpha1ApiFp(this.configuration).listSyncFriendPost(requestParameters.page, requestParameters.size, requestParameters.labelSelector, requestParameters.fieldSelector, requestParameters.sort, options).then((request) => request(this.axios, this.basePath));
+    public listRssFeedSyncLog(requestParameters: RssFeedSyncLogV1alpha1ApiListRssFeedSyncLogRequest = {}, options?: RawAxiosRequestConfig) {
+        return RssFeedSyncLogV1alpha1ApiFp(this.configuration).listRssFeedSyncLog(requestParameters.page, requestParameters.size, requestParameters.labelSelector, requestParameters.fieldSelector, requestParameters.sort, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * Patch SyncFriendPost
-     * @param {SyncFriendPostV1alpha1ApiPatchSyncFriendPostRequest} requestParameters Request parameters.
+     * Patch RssFeedSyncLog
+     * @param {RssFeedSyncLogV1alpha1ApiPatchRssFeedSyncLogRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof SyncFriendPostV1alpha1Api
+     * @memberof RssFeedSyncLogV1alpha1Api
      */
-    public patchSyncFriendPost(requestParameters: SyncFriendPostV1alpha1ApiPatchSyncFriendPostRequest, options?: RawAxiosRequestConfig) {
-        return SyncFriendPostV1alpha1ApiFp(this.configuration).patchSyncFriendPost(requestParameters.name, requestParameters.jsonPatchInner, options).then((request) => request(this.axios, this.basePath));
+    public patchRssFeedSyncLog(requestParameters: RssFeedSyncLogV1alpha1ApiPatchRssFeedSyncLogRequest, options?: RawAxiosRequestConfig) {
+        return RssFeedSyncLogV1alpha1ApiFp(this.configuration).patchRssFeedSyncLog(requestParameters.name, requestParameters.jsonPatchInner, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
-     * Update SyncFriendPost
-     * @param {SyncFriendPostV1alpha1ApiUpdateSyncFriendPostRequest} requestParameters Request parameters.
+     * Update RssFeedSyncLog
+     * @param {RssFeedSyncLogV1alpha1ApiUpdateRssFeedSyncLogRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof SyncFriendPostV1alpha1Api
+     * @memberof RssFeedSyncLogV1alpha1Api
      */
-    public updateSyncFriendPost(requestParameters: SyncFriendPostV1alpha1ApiUpdateSyncFriendPostRequest, options?: RawAxiosRequestConfig) {
-        return SyncFriendPostV1alpha1ApiFp(this.configuration).updateSyncFriendPost(requestParameters.name, requestParameters.syncFriendPost, options).then((request) => request(this.axios, this.basePath));
+    public updateRssFeedSyncLog(requestParameters: RssFeedSyncLogV1alpha1ApiUpdateRssFeedSyncLogRequest, options?: RawAxiosRequestConfig) {
+        return RssFeedSyncLogV1alpha1ApiFp(this.configuration).updateRssFeedSyncLog(requestParameters.name, requestParameters.rssFeedSyncLog, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

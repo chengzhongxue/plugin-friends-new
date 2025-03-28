@@ -53,9 +53,9 @@ public class CronCronFriendPostReconciler implements Reconciler<Reconciler.Reque
                     ZoneId zoneId = ZoneId.systemDefault();
                     if (timezone != null) {
                         try {
-                            zoneId = (ZoneId) ApplicationConversionService.getSharedInstance().convert(timezone, ZoneId.class);
-                        } catch (DateTimeException var18) {
-                            log.error("Invalid zone ID {}", timezone, var18);
+                            zoneId = ApplicationConversionService.getSharedInstance().convert(timezone, ZoneId.class);
+                        } catch (DateTimeException dateTimeException) {
+                            log.error("Invalid zone ID {}", timezone, dateTimeException);
                             return Result.doNotRetry();
                         }
                     }
@@ -72,8 +72,8 @@ public class CronCronFriendPostReconciler implements Reconciler<Reconciler.Reque
                             lastScheduledTimestamp = cronFriendPost.getMetadata().getCreationTimestamp();
                         }
 
-                        ZonedDateTime nextFromNow = (ZonedDateTime)cronExp.next(now.atZone(zoneId));
-                        ZonedDateTime nextFromLast = (ZonedDateTime)cronExp.next(lastScheduledTimestamp.atZone(zoneId));
+                        ZonedDateTime nextFromNow = cronExp.next(now.atZone(zoneId));
+                        ZonedDateTime nextFromLast = cronExp.next(lastScheduledTimestamp.atZone(zoneId));
 
                         if (nextFromNow != null && nextFromLast != null) {
                             if (Objects.equals(nextFromNow, nextFromLast)) {
@@ -90,7 +90,7 @@ public class CronCronFriendPostReconciler implements Reconciler<Reconciler.Reque
                                 ZonedDateTime scheduleTimestamp = now.atZone(zoneId);
 
                                 ZonedDateTime next;
-                                for(next = lastScheduledTimestamp.atZone(zoneId); next != null && next.isBefore(zonedNow); next = (ZonedDateTime)cronExp.next(next)) {
+                                for(next = lastScheduledTimestamp.atZone(zoneId); next != null && next.isBefore(zonedNow); next = cronExp.next(next)) {
                                     scheduleTimestamp = next;
                                 }
 

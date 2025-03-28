@@ -5,6 +5,7 @@ import type {CronFriendPost} from "@/api/generated";
 import cloneDeep from "lodash.clonedeep";
 import {friendsCoreApiClient} from "@/api";
 import { submitForm } from "@formkit/core";
+import LinkFormKit from "@/components/formkit/LinkFormKit.vue";
 
 const Se = "cron-friends-default"
 
@@ -18,11 +19,25 @@ const initialFormState: CronFriendPost = {
     timezone:"Asia/Shanghai",
     suspend: false,
     successfulRetainLimit: 0,
+    disableSyncList: undefined,
   },
   kind: "CronFriendPost",
   apiVersion: "friend.moony.la/v1alpha1",
 };
 
+const cronOptions = [{
+  label: "每月（每月 1 号 0 点）",
+  value: "@monthly"
+}, {
+  label: "每周（每周第一天 的 0 点）",
+  value: "@weekly"
+}, {
+  label: "每天（每天的 0 点）",
+  value: "@daily"
+}, {
+  label: "每小时",
+  value: "@hourly"
+}]
 
 const isUpdateMode = computed(() => {
   return !!formState.value.metadata.creationTimestamp;
@@ -30,47 +45,6 @@ const isUpdateMode = computed(() => {
 
 const  saving = ref(false);
 const formState = ref<CronFriendPost>(cloneDeep(initialFormState));
-const formSchema = ref(
-  [
-
-    {
-      $formkit: 'checkbox',
-      name: 'suspend',
-      label: '是否启用',
-      value: false,
-      help: '定时获取RSS订阅数据'
-    },
-    {
-      $cmp: 'FormKit',
-      props: {
-        type: 'text',
-        name: 'cron',
-        label: '定时表达式',
-        validation: 'required',
-        help: '定时任务表达式，请参考文档'
-      }
-    },
-    {
-      $cmp: 'FormKit',
-      props: {
-        type: 'select',
-        name: 'timezone',
-        label: '时区',
-        options: [
-          {value: "Asia/Shanghai", label: 'Asia/Shanghai (GMT+08:00)'},
-        ],
-      }
-    },
-    {
-      $formkit: 'number',
-      name: 'successfulRetainLimit',
-      label: '留限制条数',
-      help: '设置之后会保留的数据条数，设置为 0 即为5条',
-      number: "integer",
-      validation: 'required|number|min:0',
-    },
-  ]
-)
 
 const mutate = async () => {
   saving.value = true;
@@ -119,6 +93,8 @@ const handleSave = () => {
 
 </script>
 
+
+
 <template>
   <Transition mode="out-in" name="fade">
     <div class="bg-white p-4">
@@ -133,7 +109,46 @@ const handleSave = () => {
           @submit="mutate"
           submit-label="Login"
         >
-          <FormKitSchema :schema="formSchema"/>
+          <FormKit
+            type="checkbox"
+            name="suspend"
+            label="是否启用"
+            value="false"
+            help="定时获取RSS订阅数据"
+          />
+          <FormKit
+            type="select"
+            name="cron"
+            label="定时表达式"
+            allow-create
+            searchable
+            validatio="required"
+            :options="cronOptions"
+            help="定时表达式规则请参考：https://docs.spring.io/spring-framework/reference/integration/scheduling.html#scheduling-cron-expression"
+          />
+          <FormKit
+            type="select"
+            name="timezone"
+            label="时区"
+            :options="[
+               {
+                 value: 'Asia/Shanghai', 
+                 label: 'Asia/Shanghai (GMT+08:00)'
+               },
+            ]"
+          />
+          <FormKit
+            type="number"
+            name="successfulRetainLimit"
+            label="留限制条数"
+            number="integer"
+            validation="required|number|min:0"
+            help="设置之后会保留的数据条数，设置为 0 即为5条"
+          />
+          <LinkFormKit
+            name="disableSyncList"
+            label="禁止同步名单"
+          ></LinkFormKit>
         </FormKit>
       </div>
       <div v-permission="['plugin:friends:manage']" class="pt-5">

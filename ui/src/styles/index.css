@@ -51,6 +51,9 @@
   font-size: 14px;
   color: #3c434a;
 }
+.thyuu-card header img {
+  border-radius: 50%;
+}
 .thyuu-card article {
   display: flex;
   flex-wrap: wrap;

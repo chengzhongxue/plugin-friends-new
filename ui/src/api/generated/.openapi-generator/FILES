@@ -5,7 +5,7 @@ api.ts
 api/api-friend-moony-la-v1alpha1-friend-post-api.ts
 api/cron-friend-post-v1alpha1-api.ts
 api/friend-post-v1alpha1-api.ts
-api/sync-friend-post-v1alpha1-api.ts
+api/rss-feed-sync-log-v1alpha1-api.ts
 base.ts
 common.ts
 configuration.ts

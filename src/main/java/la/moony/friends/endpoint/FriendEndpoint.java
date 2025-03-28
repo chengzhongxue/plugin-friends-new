@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import la.moony.friends.ListedRssSyncLog;
 import la.moony.friends.RssFeedSyncEvent;
 import la.moony.friends.extension.FriendPost;
+import la.moony.friends.extension.RssFeedSyncLog;
 import la.moony.friends.query.FriendPostQuery;
 import la.moony.friends.query.RssSyncLogQuery;
 import la.moony.friends.service.RssDetailService;
@@ -11,6 +12,7 @@ import la.moony.friends.service.RssFeedSyncLogService;
 import la.moony.friends.vo.RssDetail;
 import org.springdoc.webflux.core.fn.SpringdocRouteBuilder;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -18,11 +20,14 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 import run.halo.app.core.extension.endpoint.CustomEndpoint;
 import run.halo.app.extension.GroupVersion;
+import run.halo.app.extension.ListOptions;
 import run.halo.app.extension.ListResult;
 import run.halo.app.extension.ReactiveExtensionClient;
+import run.halo.app.extension.router.selector.FieldSelector;
 
 import static org.springdoc.core.fn.builders.apiresponse.Builder.responseBuilder;
 import static org.springdoc.core.fn.builders.parameter.Builder.parameterBuilder;
+import static run.halo.app.extension.index.query.QueryFactory.isNull;
 
 @Component
 public class FriendEndpoint implements CustomEndpoint {
@@ -51,7 +56,7 @@ public class FriendEndpoint implements CustomEndpoint {
     public RouterFunction<ServerResponse> endpoint() {
         return SpringdocRouteBuilder.route()
             .GET("friendposts", this::listFriendPost, builder -> {
-                builder.operationId("listFriendPosts")
+                builder.operationId("ListFriendPosts")
                     .description("List friendPost.")
                     .tag(tag)
                     .response(
@@ -59,6 +64,13 @@ public class FriendEndpoint implements CustomEndpoint {
                         .implementation(ListResult.generateGenericClass(FriendPost.class))
                     );
                 FriendPostQuery.buildParameters(builder);
+            })
+            .DELETE("friendposts/-/delete", this::deleteAllFriendPost, builder -> {
+                builder.operationId("DeleteAllFriendPost")
+                    .description("Delete All FriendPost.")
+                    .tag(tag)
+                    .response(responseBuilder()
+                        .implementation(Void.class));
             })
             .GET("rsssynclogs", this::listRssSyncLog, builder -> {
                 builder.operationId("ListRssSyncLogs")
@@ -71,7 +83,7 @@ public class FriendEndpoint implements CustomEndpoint {
                 RssSyncLogQuery.buildParameters(builder);
             })
             .GET("parsingrss", this::parsingRss, builder -> {
-                builder.operationId("parsingRss")
+                builder.operationId("ParsingRss")
                     .tag(tag)
                     .parameter(parameterBuilder()
                         .name("rssUrl")
@@ -91,7 +103,7 @@ public class FriendEndpoint implements CustomEndpoint {
                     );
             })
             .POST("syncrssfeed/{name}", this::syncRssFeed,
-                builder -> builder.operationId("syncRssFeed")
+                builder -> builder.operationId("SyncRssFeed")
                     .tag(tag)
                     .parameter(parameterBuilder().name("name")
                         .in(ParameterIn.PATH)
@@ -108,6 +120,15 @@ public class FriendEndpoint implements CustomEndpoint {
         FriendPostQuery friendPostQuery = new FriendPostQuery(request);
         return client.listBy(FriendPost.class, friendPostQuery.toListOptions(),friendPostQuery.toPageRequest())
             .flatMap(friendPosts -> ServerResponse.ok().bodyValue(friendPosts));
+    }
+
+    Mono<ServerResponse> deleteAllFriendPost(ServerRequest request) {
+        return client.listAll(FriendPost.class,new ListOptions().setFieldSelector(FieldSelector.of(isNull("metadata.deletionTimestamp"))), Sort.unsorted())
+            .flatMap(friendPost -> client.delete(friendPost))
+            .flatMap(friendPost -> client.listAll(RssFeedSyncLog.class,new ListOptions().setFieldSelector(FieldSelector.of(isNull("metadata.deletionTimestamp"))), Sort.unsorted())
+                .flatMap(rssFeedSyncLog -> client.delete(rssFeedSyncLog))
+            )
+            .then(ServerResponse.ok().build());
     }
 
     Mono<ServerResponse> listRssSyncLog(ServerRequest request) {

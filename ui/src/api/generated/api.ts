@@ -17,5 +17,5 @@
 export * from './api/api-friend-moony-la-v1alpha1-friend-post-api';
 export * from './api/cron-friend-post-v1alpha1-api';
 export * from './api/friend-post-v1alpha1-api';
-export * from './api/sync-friend-post-v1alpha1-api';
+export * from './api/rss-feed-sync-log-v1alpha1-api';
 

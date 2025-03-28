@@ -13,7 +13,8 @@ import {
 import { useQuery } from "@tanstack/vue-query";
 import { refDebounced } from "@vueuse/shared";
 import { ref, toRefs } from "vue";
-import type { Link, LinkList } from "@/types";
+import type { LinkList } from "@/types";
+import type {Link} from "@/api/generated";
 
 const props = withDefaults(
   defineProps<{

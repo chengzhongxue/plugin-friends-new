@@ -44,5 +44,11 @@ export interface CronSpec {
      * @memberof CronSpec
      */
     'timezone'?: string;
+    /**
+     *
+     * @type {Array<string>}
+     * @memberof CronSpec
+     */
+    'disableSyncList'?: Array<string>;
 }
 

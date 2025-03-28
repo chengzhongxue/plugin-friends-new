@@ -22,7 +22,7 @@ import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObj
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, type RequestArgs, BaseAPI, RequiredError, operationServerMap } from '../base';
 // @ts-ignore
-import type { FriendPostList } from '../models';
+import type {FriendPostList, ListedRssSyncLogList} from '../models';
 // @ts-ignore
 import type { RssDetail } from '../models';
 /**
@@ -104,6 +104,117 @@ export const ApiFriendMoonyLaV1alpha1FriendPostApiAxiosParamCreator = function (
             };
         },
         /**
+         * List RssSyncLog.
+         * @param {number} [page] Page number. Default is 0.
+         * @param {number} [size] Size number. Default is 0.
+         * @param {Array<string>} [labelSelector] Label selector. e.g.: hidden!&#x3D;true
+         * @param {Array<string>} [fieldSelector] Field selector. e.g.: metadata.name&#x3D;&#x3D;halo
+         * @param {Array<string>} [sort] Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
+         * @param {string} [keyword]
+         * @param {string} [state]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listRssSyncLogs: async (page?: number, size?: number, labelSelector?: Array<string>, fieldSelector?: Array<string>, sort?: Array<string>, keyword?: string, state?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+          const localVarPath = `/apis/api.friend.moony.la/v1alpha1/rsssynclogs`;
+          // use dummy base URL string because the URL constructor only accepts absolute URLs.
+          const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+          let baseOptions;
+          if (configuration) {
+            baseOptions = configuration.baseOptions;
+          }
+  
+          const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+          const localVarHeaderParameter = {} as any;
+          const localVarQueryParameter = {} as any;
+  
+          // authentication basicAuth required
+          // http basic authentication required
+          setBasicAuthToObject(localVarRequestOptions, configuration)
+  
+          // authentication bearerAuth required
+          // http bearer authentication required
+          await setBearerAuthToObject(localVarHeaderParameter, configuration)
+  
+          if (page !== undefined) {
+            localVarQueryParameter['page'] = page;
+          }
+  
+          if (size !== undefined) {
+            localVarQueryParameter['size'] = size;
+          }
+  
+          if (labelSelector) {
+            localVarQueryParameter['labelSelector'] = labelSelector;
+          }
+  
+          if (fieldSelector) {
+            localVarQueryParameter['fieldSelector'] = fieldSelector;
+          }
+  
+          if (sort) {
+            localVarQueryParameter['sort'] = sort;
+          }
+  
+          if (keyword !== undefined) {
+            localVarQueryParameter['keyword'] = keyword;
+          }
+  
+          if (state !== undefined) {
+            localVarQueryParameter['state'] = state;
+          }
+  
+          setSearchParams(localVarUrlObj, localVarQueryParameter);
+          let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+          localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+  
+          return {
+            url: toPathString(localVarUrlObj),
+            options: localVarRequestOptions,
+          };
+        },
+        /**
+         * 
+         * @param {string} name
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        syncRssFeed: async (name: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+          // verify required parameter 'couponSetting' is not null or undefined
+          assertParamExists('syncRssFeed', 'name', name)
+          const localVarPath = `/apis/api.friend.moony.la/v1alpha1/syncrssfeed/{name}`
+            .replace(`{${"name"}}`, encodeURIComponent(String(name)));
+          // use dummy base URL string because the URL constructor only accepts absolute URLs.
+          const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+          let baseOptions;
+          if (configuration) {
+            baseOptions = configuration.baseOptions;
+          }
+  
+          const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+          const localVarHeaderParameter = {} as any;
+          const localVarQueryParameter = {} as any;
+  
+          // authentication basicAuth required
+          // http basic authentication required
+          setBasicAuthToObject(localVarRequestOptions, configuration)
+  
+          // authentication bearerAuth required
+          // http bearer authentication required
+          await setBearerAuthToObject(localVarHeaderParameter, configuration)
+          
+  
+          
+          setSearchParams(localVarUrlObj, localVarQueryParameter);
+          let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+          localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+  
+          return {
+            url: toPathString(localVarUrlObj),
+            options: localVarRequestOptions,
+          };
+        },
+        /**
          * 
          * @param {string} rssUrl 
          * @param {string} [fetchLimitNumber] 
@@ -181,6 +292,35 @@ export const ApiFriendMoonyLaV1alpha1FriendPostApiFp = function(configuration?: 
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
+         * List RssSyncLog.
+         * @param {number} [page] Page number. Default is 0.
+         * @param {number} [size] Size number. Default is 0.
+         * @param {Array<string>} [labelSelector] Label selector. e.g.: hidden!&#x3D;true
+         * @param {Array<string>} [fieldSelector] Field selector. e.g.: metadata.name&#x3D;&#x3D;halo
+         * @param {Array<string>} [sort] Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
+         * @param {string} [keyword]
+         * @param {string} [state]
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listRssSyncLogs(page?: number, size?: number, labelSelector?: Array<string>, fieldSelector?: Array<string>, sort?: Array<string>, keyword?: string, state?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ListedRssSyncLogList>> {
+          const localVarAxiosArgs = await localVarAxiosParamCreator.listRssSyncLogs(page, size, labelSelector, fieldSelector, sort, keyword, state, options);
+          const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+          const localVarOperationServerBasePath = operationServerMap['ApiFriendMoonyLaV1alpha1FriendPostApi.listRssSyncLogs']?.[localVarOperationServerIndex]?.url;
+          return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * @param {string} name
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async syncRssFeed(name: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+          const localVarAxiosArgs = await localVarAxiosParamCreator.syncRssFeed(name, options);
+          const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+          const localVarOperationServerBasePath = operationServerMap['UcApiStoreKunkunyuComV1alpha1UserCouponApi.syncRssFeed']?.[localVarOperationServerIndex]?.url;
+          return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
          * 
          * @param {string} rssUrl 
          * @param {string} [fetchLimitNumber] 
@@ -211,6 +351,23 @@ export const ApiFriendMoonyLaV1alpha1FriendPostApiFactory = function (configurat
          */
         listFriendPosts(requestParameters: ApiFriendMoonyLaV1alpha1FriendPostApiListFriendPostsRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<FriendPostList> {
             return localVarFp.listFriendPosts(requestParameters.page, requestParameters.size, requestParameters.labelSelector, requestParameters.fieldSelector, requestParameters.sort, requestParameters.linkName, requestParameters.keyword, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * List RssSyncLog.
+         * @param {ApiFriendMoonyLaV1alpha1FriendPostApiListRssSyncLogsRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listRssSyncLogs(requestParameters: ApiFriendMoonyLaV1alpha1FriendPostApiListRssSyncLogsRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<ListedRssSyncLogList> {
+          return localVarFp.listRssSyncLogs(requestParameters.page, requestParameters.size, requestParameters.labelSelector, requestParameters.fieldSelector, requestParameters.sort, requestParameters.keyword, requestParameters.state, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * @param {LicenseKeyV1alpha1ApiSyncRssFeedRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        syncRssFeed(requestParameters: ApiFriendMoonyLaV1alpha1FriendPostApiSyncRssFeedRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+          return localVarFp.syncRssFeed(requestParameters.name, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -281,6 +438,75 @@ export interface ApiFriendMoonyLaV1alpha1FriendPostApiListFriendPostsRequest {
 }
 
 /**
+ * Request parameters for listRssSyncLogs operation in ApiFriendMoonyLaV1alpha1FriendPostApi.
+ * @export
+ * @interface ApiFriendMoonyLaV1alpha1FriendPostApiListRssSyncLogsRequest
+ */
+export interface ApiFriendMoonyLaV1alpha1FriendPostApiListRssSyncLogsRequest {
+  /**
+   * Page number. Default is 0.
+   * @type {number}
+   * @memberof ApiFriendMoonyLaV1alpha1FriendPostApiListRssSyncLogsRequest
+   */
+  readonly page?: number
+
+  /**
+   * Size number. Default is 0.
+   * @type {number}
+   * @memberof ApiFriendMoonyLaV1alpha1FriendPostApiListRssSyncLogs
+   */
+  readonly size?: number
+
+  /**
+   * Label selector. e.g.: hidden!&#x3D;true
+   * @type {Array<string>}
+   * @memberof ApiFriendMoonyLaV1alpha1FriendPostApiListRssSyncLogs
+   */
+  readonly labelSelector?: Array<string>
+
+  /**
+   * Field selector. e.g.: metadata.name&#x3D;&#x3D;halo
+   * @type {Array<string>}
+   * @memberof ApiFriendMoonyLaV1alpha1FriendPostApiListRssSyncLogs
+   */
+  readonly fieldSelector?: Array<string>
+
+  /**
+   * Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.
+   * @type {Array<string>}
+   * @memberof ApiFriendMoonyLaV1alpha1FriendPostApiListRssSyncLogs
+   */
+  readonly sort?: Array<string>
+
+  /**
+   * RssFeedSyncLog filtered by keyword.
+   * @type {string}
+   * @memberof ApiFriendMoonyLaV1alpha1FriendPostApiListRssSyncLogs
+   */
+  readonly keyword?: string
+
+  /**
+   * RssFeedSyncLog filtered by state.
+   * @type {string}
+   * @memberof ApiFriendMoonyLaV1alpha1FriendPostApiListRssSyncLogs
+   */
+  readonly state?: string
+}
+
+/**
+ * 
+ * @export
+ * @interface ApiFriendMoonyLaV1alpha1FriendPostApiSyncRssFeedRequest
+ */
+export interface ApiFriendMoonyLaV1alpha1FriendPostApiSyncRssFeedRequest {
+  /**
+   * @type {string}
+   * @memberof ApiFriendMoonyLaV1alpha1FriendPostApiSyncRssFeed
+   */
+  readonly name: string
+}
+
+/**
  * Request parameters for parsingRss operation in ApiFriendMoonyLaV1alpha1FriendPostApi.
  * @export
  * @interface ApiFriendMoonyLaV1alpha1FriendPostApiParsingRssRequest
@@ -317,6 +543,28 @@ export class ApiFriendMoonyLaV1alpha1FriendPostApi extends BaseAPI {
      */
     public listFriendPosts(requestParameters: ApiFriendMoonyLaV1alpha1FriendPostApiListFriendPostsRequest = {}, options?: RawAxiosRequestConfig) {
         return ApiFriendMoonyLaV1alpha1FriendPostApiFp(this.configuration).listFriendPosts(requestParameters.page, requestParameters.size, requestParameters.labelSelector, requestParameters.fieldSelector, requestParameters.sort, requestParameters.linkName, requestParameters.keyword, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * List RssSyncLog.
+     * @param {ApiFriendMoonyLaV1alpha1FriendPostApiListRssSyncLogsRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiFriendMoonyLaV1alpha1FriendPostApi
+     */
+    public listRssSyncLogs(requestParameters: ApiFriendMoonyLaV1alpha1FriendPostApiListRssSyncLogsRequest = {}, options?: RawAxiosRequestConfig) {
+      return ApiFriendMoonyLaV1alpha1FriendPostApiFp(this.configuration).listRssSyncLogs(requestParameters.page, requestParameters.size, requestParameters.labelSelector, requestParameters.fieldSelector, requestParameters.sort, requestParameters.keyword, requestParameters.state, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     *
+     * @param {ApiFriendMoonyLaV1alpha1FriendPostApiSyncRssFeedRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ApiFriendMoonyLaV1alpha1FriendPostApi
+     */
+    public syncRssFeed(requestParameters: ApiFriendMoonyLaV1alpha1FriendPostApiSyncRssFeedRequest, options?: RawAxiosRequestConfig) {
+      return ApiFriendMoonyLaV1alpha1FriendPostApiFp(this.configuration).syncRssFeed(requestParameters.name, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

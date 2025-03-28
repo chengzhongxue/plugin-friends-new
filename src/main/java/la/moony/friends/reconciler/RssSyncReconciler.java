@@ -10,7 +10,6 @@ import la.moony.friends.extension.CronFriendPost;
 import la.moony.friends.extension.FriendPost;
 import la.moony.friends.extension.Link;
 import la.moony.friends.extension.RssFeedSyncLog;
-import la.moony.friends.service.SettingConfigFriends;
 import la.moony.friends.util.CommonUtils;
 import la.moony.friends.util.LinkRequest;
 import org.apache.commons.lang3.ObjectUtils;
@@ -40,8 +39,9 @@ import java.util.Optional;
 
 import static org.springframework.data.domain.Sort.Order.asc;
 import static run.halo.app.extension.MetadataUtil.nullSafeAnnotations;
-import static run.halo.app.extension.index.query.QueryFactory.all;
+import static run.halo.app.extension.index.query.QueryFactory.and;
 import static run.halo.app.extension.index.query.QueryFactory.equal;
+import static run.halo.app.extension.index.query.QueryFactory.isNull;
 
 @Component
 public class RssSyncReconciler implements Reconciler<RssSyncReconciler.Request>,SmartLifecycle {
@@ -53,13 +53,11 @@ public class RssSyncReconciler implements Reconciler<RssSyncReconciler.Request>,
     private final ExtensionClient client;
     private final RequestQueue<Request> queue;
     private final Controller controller;
-    private final SettingConfigFriends settingConfigFriends;
     private final ObjectMapper objectMapper = Unstructured.OBJECT_MAPPER;
 
 
-    public RssSyncReconciler(ExtensionClient client, SettingConfigFriends settingConfigFriends) {
+    public RssSyncReconciler(ExtensionClient client) {
         this.client = client;
-        this.settingConfigFriends = settingConfigFriends;
         queue = new DefaultQueue<>(Instant::now);
         controller = this.setupWith(null);
     }
@@ -69,26 +67,27 @@ public class RssSyncReconciler implements Reconciler<RssSyncReconciler.Request>,
         String s = request.s();
         Optional<CronFriendPost> cronFriendPost = client.fetch(CronFriendPost.class, request.name());
         int sum = 5;
+        List<String> disableSyncList = new ArrayList<>();
         if (cronFriendPost.isPresent()) {
-            int successfulRetainLimit = cronFriendPost.get().getSpec().getSuccessfulRetainLimit();
+            var spec = cronFriendPost.get().getSpec();
+            int successfulRetainLimit = spec.getSuccessfulRetainLimit();
             sum = successfulRetainLimit == 0 ? 5 : successfulRetainLimit;
+            disableSyncList = spec.getDisableSyncList();
         }
         var listOptions = new ListOptions();
-        FieldSelector fieldSelector = FieldSelector.of(all());
+        FieldSelector fieldSelector = FieldSelector.of(isNull("metadata.deletionTimestamp"));
         if (!StringUtils.equals(s,"all")) {
             fieldSelector.andQuery(equal("metadata.name",s));
         }
         listOptions.setFieldSelector(fieldSelector);
         List<Link> links = client.listAll(Link.class, listOptions, defaultSort());
         if (!links.isEmpty()) {
-            SettingConfigFriends.BaseConfig baseConfig = settingConfigFriends.getBaseConfig().block();
             for (Link link : links) {
                 var linkName = link.getMetadata().getName();
                 String rssUri = getRss(link);
-                List<String> disableSynchronizationList = baseConfig.getDisableSynchronizationList();
                 boolean isContains = false;
-                if (disableSynchronizationList!=null) {
-                    isContains = disableSynchronizationList.contains(linkName);
+                if (ObjectUtils.isNotEmpty(disableSyncList)) {
+                    isContains = disableSyncList.contains(linkName);
                 }
                 String syncLogName = "sync-log-" + linkName;
                 RssFeedSyncLog newRssFeedSyncLog = new RssFeedSyncLog();
@@ -164,7 +163,9 @@ public class RssSyncReconciler implements Reconciler<RssSyncReconciler.Request>,
             for (FriendPost rssPost : friendPostList) {
                 var friendPostListOptions = new ListOptions();
                 friendPostListOptions.setFieldSelector(FieldSelector.of(
+                    and(isNull("metadata.deletionTimestamp"),
                     equal("spec.postLink",rssPost.getSpec().getPostLink())
+                    )
                 ));
                 long total = client.listBy(FriendPost.class, friendPostListOptions,
                     PageRequestImpl.ofSize(1)).getTotal();
@@ -259,8 +260,8 @@ public class RssSyncReconciler implements Reconciler<RssSyncReconciler.Request>,
             this,
             queue,
             null,
-            Duration.ofMillis(100),
-            Duration.ofMinutes(10));
+            Duration.ofMillis(300),
+            Duration.ofMinutes(5));
     }
 
     @Override

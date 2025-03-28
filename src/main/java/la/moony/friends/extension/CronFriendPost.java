@@ -3,6 +3,7 @@ package la.moony.friends.extension;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.Instant;
+import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -37,6 +38,8 @@ public class CronFriendPost extends AbstractExtension {
             minimum = "0"
         )
         private int successfulRetainLimit;
+
+        private List<String> disableSyncList;
 
     }
 

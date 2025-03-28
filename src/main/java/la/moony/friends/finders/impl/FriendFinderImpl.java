@@ -4,6 +4,7 @@ import jakarta.annotation.Nonnull;
 import la.moony.friends.extension.FriendPost;
 import la.moony.friends.extension.Link;
 import la.moony.friends.extension.LinkGroup;
+import la.moony.friends.extension.RssFeedSyncLog;
 import la.moony.friends.finders.FriendFinder;
 import la.moony.friends.vo.FriendPostVo;
 import la.moony.friends.vo.LinkGroupVo;
@@ -11,8 +12,10 @@ import la.moony.friends.vo.LinkVo;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.Sort;
+import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import org.springframework.lang.NonNull;
 import run.halo.app.extension.*;
 import run.halo.app.extension.router.selector.FieldSelector;
 import run.halo.app.theme.finders.Finder;
@@ -113,10 +116,7 @@ public class FriendFinderImpl implements FriendFinder {
         }
         listOptions.setFieldSelector(FieldSelector.of(query));
         return client.listAll(Link.class, listOptions, defaultLinkSort())
-            .map(LinkVo::from)
-            .concatMap(link -> friendPostListBy(link.getMetadata().getName())
-                .map(link::withFriendPosts)
-            )
+            .flatMapSequential(this::convertToListedVo)
             .collectList()
             .map(links -> {
                 // 排序逻辑
@@ -131,6 +131,24 @@ public class FriendFinderImpl implements FriendFinder {
                     )).collect(Collectors.toList());
             })
             .flatMapMany(Flux::fromIterable);
+    }
+
+
+    public Mono<LinkVo> convertToListedVo(@NonNull Link link) {
+        Assert.notNull(link, "Link must not be null");
+        LinkVo linkVo = LinkVo.from(link);
+        linkVo.setFriendPosts(List.of());
+        return Mono.just(linkVo)
+            .flatMap(lp -> friendPostListBy(lp.getMetadata().getName())
+                .doOnNext(lp::setFriendPosts)
+                .thenReturn(lp)
+            ).flatMap(p -> {
+                String linkName = p.getMetadata().getName();
+                return client.fetch(RssFeedSyncLog.class,"sync-log-" + linkName)
+                    .doOnNext(p::setRssFeedSyncLog)
+                    .thenReturn(p);
+            })
+            .defaultIfEmpty(linkVo);
     }
 
     public Mono<List<FriendPostVo>> friendPostListBy(String linkName) {

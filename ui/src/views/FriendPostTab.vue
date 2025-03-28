@@ -9,7 +9,7 @@ import {
   VPagination,
   Toast,
   VSpace,
-  IconCloseCircle} from "@halo-dev/components";
+} from "@halo-dev/components";
 import {useQuery, useQueryClient} from "@tanstack/vue-query";
 import {computed, ref, watch} from "vue";
 import { formatDatetime } from "@/utils/date";
@@ -22,10 +22,13 @@ const queryClient = useQueryClient();
 const selectedSort = useRouteQuery<string | undefined>("sort");
 const selectedLink = useRouteQuery<string | undefined>("author");
 
-const page = ref(1);
-const size = ref(20);
-const keyword = ref("");
-const searchText = ref("");
+const keyword = useRouteQuery<string>("keyword", "");
+const page = useRouteQuery<number>("page", 1, {
+  transform: Number,
+});
+const size = useRouteQuery<number>("size", 30, {
+  transform: Number,
+});
 const total = ref(0);
 
 
@@ -110,14 +113,6 @@ const handleDelete = async (name: string) => {
   });
 };
 
-function handleReset() {
-  keyword.value = "";
-  searchText.value = "";
-}
-function onKeywordChange() {
-  keyword.value = searchText.value;
-}
-
 </script>
 
 <template>
@@ -126,25 +121,10 @@ function onKeywordChange() {
     <template #header>
       <div class="block w-full bg-gray-50 px-4 py-3">
         <div class="relative flex flex-col flex-wrap items-start gap-4 sm:flex-row sm:items-center" >
-          <div class="flex w-full flex-1 items-center sm:w-auto" >
-            <FormKit
-              v-model="searchText"
-              placeholder="输入关键词搜索"
-              type="text"
-              outer-class="!moments-p-0 moments-mr-2"
-              @keyup.enter="onKeywordChange"
-            >
-              <template v-if="keyword" #suffix>
-                <div
-                  class="group flex h-full cursor-pointer items-center bg-white px-2 transition-all hover:bg-gray-50"
-                  @click="handleReset"
-                >
-                  <IconCloseCircle
-                    class="h-4 w-4 text-gray-500 group-hover:text-gray-700"
-                  />
-                </div>
-              </template>
-            </FormKit>
+          <div class="flex w-full flex-1 items-center sm:w-auto">
+            <SearchInput
+              v-model="keyword"
+            />
           </div>
           <VSpace spacing="lg" class="flex-wrap">
               <FilterCleanButton
@@ -241,7 +221,7 @@ function onKeywordChange() {
         v-model:page="page"
         v-model:size="size"
         :total="total"
-        :size-options="[20, 30, 50, 100]"
+        :size-options="[30, 60, 90]"
       />
     </template>
   </VCard>

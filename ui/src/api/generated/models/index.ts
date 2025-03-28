@@ -1,3 +1,5 @@
+import type {LinkSpec} from "@/api/generated/models/link-spec";
+
 export * from './add-operation';
 export * from './channel';
 export * from './copy-operation';
@@ -10,13 +12,15 @@ export * from './friend-post-list';
 export * from './friend-post-spec';
 export * from './item';
 export * from './json-patch-inner';
+export * from './link';
+export * from './link-spec';
+export * from './listed-rss-sync-log';
+export * from './listed-rss-sync-log-list';
 export * from './metadata';
 export * from './move-operation';
 export * from './remove-operation';
 export * from './replace-operation';
 export * from './rss-detail';
-export * from './sync-friend-post';
-export * from './sync-friend-post-list';
-export * from './sync-friend-post-spec';
-export * from './sync-friend-post-status';
+export * from './rss-feed-sync-log';
+export * from './rss-feed-sync-log-list';
 export * from './test-operation';
