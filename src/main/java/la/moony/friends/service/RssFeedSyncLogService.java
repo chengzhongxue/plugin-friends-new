@@ -8,4 +8,6 @@ import run.halo.app.extension.ListResult;
 public interface RssFeedSyncLogService {
 
     Mono<ListResult<ListedRssSyncLog>> listRssSyncLog(RssSyncLogQuery query);
+
+    Mono<Void> publishRssFeedSyncEvent(String name);
 }

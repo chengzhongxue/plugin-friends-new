@@ -64,61 +64,43 @@ public class RssSyncReconciler implements Reconciler<RssSyncReconciler.Request>,
 
     @Override
     public Result reconcile(Request request) {
-        String s = request.s();
-        Optional<CronFriendPost> cronFriendPost = client.fetch(CronFriendPost.class, request.name());
-        int sum = 5;
-        List<String> disableSyncList = new ArrayList<>();
-        if (cronFriendPost.isPresent()) {
-            var spec = cronFriendPost.get().getSpec();
-            int successfulRetainLimit = spec.getSuccessfulRetainLimit();
-            sum = successfulRetainLimit == 0 ? 5 : successfulRetainLimit;
-            disableSyncList = spec.getDisableSyncList();
+        Link link = request.link();
+        int sum = request.sum();
+        List<String> disableSyncList = request.disableSyncList();
+        var linkName = link.getMetadata().getName();
+        String rssUri = getRss(link);
+        boolean isContains = false;
+        if (ObjectUtils.isNotEmpty(disableSyncList)) {
+            isContains = disableSyncList.contains(linkName);
         }
-        var listOptions = new ListOptions();
-        FieldSelector fieldSelector = FieldSelector.of(isNull("metadata.deletionTimestamp"));
-        if (!StringUtils.equals(s,"all")) {
-            fieldSelector.andQuery(equal("metadata.name",s));
+        String syncLogName = "sync-log-" + linkName;
+        RssFeedSyncLog newRssFeedSyncLog = new RssFeedSyncLog();
+        Metadata metadata = new Metadata();
+        metadata.setName(syncLogName);
+        newRssFeedSyncLog.setMetadata(metadata);
+        newRssFeedSyncLog.setLinkName(linkName);
+        if (StringUtils.isNotEmpty(rssUri) && !isContains) {
+            tryToSynchronizeFriendPost(newRssFeedSyncLog, link, sum);
+        }else if (StringUtils.isEmpty(rssUri)) {
+            newRssFeedSyncLog.setSyncTime(Instant.now());
+            newRssFeedSyncLog.setState(RssFeedSyncLog.RssFeedSyncLogState.nolink);
+            newRssFeedSyncLog.setFailureReason("No RSS link");
+            newRssFeedSyncLog.setFailureMessage("无 RSS 链接.");
+        }else if (isContains) {
+            newRssFeedSyncLog.setSyncTime(Instant.now());
+            newRssFeedSyncLog.setState(RssFeedSyncLog.RssFeedSyncLogState.failed);
+            newRssFeedSyncLog.setFailureReason("admin disables sync");
+            newRssFeedSyncLog.setFailureMessage("管理员禁用同步.");
         }
-        listOptions.setFieldSelector(fieldSelector);
-        List<Link> links = client.listAll(Link.class, listOptions, defaultSort());
-        if (!links.isEmpty()) {
-            for (Link link : links) {
-                var linkName = link.getMetadata().getName();
-                String rssUri = getRss(link);
-                boolean isContains = false;
-                if (ObjectUtils.isNotEmpty(disableSyncList)) {
-                    isContains = disableSyncList.contains(linkName);
-                }
-                String syncLogName = "sync-log-" + linkName;
-                RssFeedSyncLog newRssFeedSyncLog = new RssFeedSyncLog();
-                Metadata metadata = new Metadata();
-                metadata.setName(syncLogName);
-                newRssFeedSyncLog.setMetadata(metadata);
-                newRssFeedSyncLog.setLinkName(linkName);
-                if (StringUtils.isNotEmpty(rssUri) && !isContains) {
-                    tryToSynchronizeFriendPost(newRssFeedSyncLog, link, sum);
-                }else if (StringUtils.isEmpty(rssUri)) {
-                    newRssFeedSyncLog.setSyncTime(Instant.now());
-                    newRssFeedSyncLog.setState(RssFeedSyncLog.RssFeedSyncLogState.nolink);
-                    newRssFeedSyncLog.setFailureReason("No RSS link");
-                    newRssFeedSyncLog.setFailureMessage("无 RSS 链接.");
-                }else if (isContains) {
-                    newRssFeedSyncLog.setSyncTime(Instant.now());
-                    newRssFeedSyncLog.setState(RssFeedSyncLog.RssFeedSyncLogState.failed);
-                    newRssFeedSyncLog.setFailureReason("admin disables sync");
-                    newRssFeedSyncLog.setFailureMessage("管理员禁用同步.");
-                }
-                Optional<RssFeedSyncLog> fetch = client.fetch(RssFeedSyncLog.class, syncLogName);
-                if (fetch.isPresent()) {
-                    RssFeedSyncLog rssFeedSyncLog = fetch.get();
-                    rssFeedSyncLog.setSyncTime(newRssFeedSyncLog.getSyncTime());
-                    rssFeedSyncLog.setFailureReason(newRssFeedSyncLog.getFailureReason());
-                    rssFeedSyncLog.setFailureMessage(newRssFeedSyncLog.getFailureMessage());
-                    client.update(rssFeedSyncLog);
-                }else {
-                    client.create(newRssFeedSyncLog);
-                }
-            }
+        Optional<RssFeedSyncLog> fetch = client.fetch(RssFeedSyncLog.class, syncLogName);
+        if (fetch.isPresent()) {
+            RssFeedSyncLog rssFeedSyncLog = fetch.get();
+            rssFeedSyncLog.setSyncTime(newRssFeedSyncLog.getSyncTime());
+            rssFeedSyncLog.setFailureReason(newRssFeedSyncLog.getFailureReason());
+            rssFeedSyncLog.setFailureMessage(newRssFeedSyncLog.getFailureMessage());
+            client.update(rssFeedSyncLog);
+        }else {
+            client.create(newRssFeedSyncLog);
         }
         return Result.doNotRetry();
     }
@@ -147,7 +129,6 @@ public class RssSyncReconciler implements Reconciler<RssSyncReconciler.Request>,
     }
 
     private void tryToSynchronizeFriendPost(RssFeedSyncLog syncLog, Link link, int sum) {
-
         var linkName = link.getMetadata().getName();
         var annotations = nullSafeAnnotations(link);
         var rssUri = annotations.get("rss_uri");
@@ -157,9 +138,10 @@ public class RssSyncReconciler implements Reconciler<RssSyncReconciler.Request>,
         spec.setSuccessfulRetainLimit(5);
         cron.setSpec(spec);
         syncLog.setSyncTime(Instant.now());
-        List<FriendPost> friendPostList = fetchFriendPost(rssUri, sum,syncLog);
-        if (friendPostList == null || friendPostList.size() == 0) {
-        }else {
+        List<FriendPost> friendPostList = fetchFriendPost(rssUri, sum, syncLog);
+        
+        // 即使获取失败也继续处理
+        if (friendPostList != null && !friendPostList.isEmpty()) {
             for (FriendPost rssPost : friendPostList) {
                 var friendPostListOptions = new ListOptions();
                 friendPostListOptions.setFieldSelector(FieldSelector.of(
@@ -261,7 +243,8 @@ public class RssSyncReconciler implements Reconciler<RssSyncReconciler.Request>,
             queue,
             null,
             Duration.ofMillis(300),
-            Duration.ofMinutes(5));
+            Duration.ofMinutes(5),
+            5);
     }
 
     @Override
@@ -283,14 +266,10 @@ public class RssSyncReconciler implements Reconciler<RssSyncReconciler.Request>,
 
     @EventListener(RssFeedSyncEvent.class)
     public void onReplyEvent(RssFeedSyncEvent event) {
-        var request = new Request(event.getName(),event.getS());
+        var request = new Request(event.getLink(),event.getSum(),event.getDisableSyncList());
         queue.addImmediately(request);
     }
 
-    public record Request(String name,String s) {
-    }
-
-    static Sort defaultSort() {
-        return Sort.by("metadata.creationTimestamp").descending();
+    public record Request(Link link,int sum,List<String> disableSyncList) {
     }
 }

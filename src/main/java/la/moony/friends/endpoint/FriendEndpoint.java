@@ -2,7 +2,6 @@ package la.moony.friends.endpoint;
 
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import la.moony.friends.ListedRssSyncLog;
-import la.moony.friends.RssFeedSyncEvent;
 import la.moony.friends.extension.FriendPost;
 import la.moony.friends.extension.RssFeedSyncLog;
 import la.moony.friends.query.FriendPostQuery;
@@ -11,7 +10,6 @@ import la.moony.friends.service.RssDetailService;
 import la.moony.friends.service.RssFeedSyncLogService;
 import la.moony.friends.vo.RssDetail;
 import org.springdoc.webflux.core.fn.SpringdocRouteBuilder;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.RouterFunction;
@@ -39,16 +37,13 @@ public class FriendEndpoint implements CustomEndpoint {
 
     private final RssDetailService rssDetailService;
 
-    private final ApplicationEventPublisher eventPublisher;
-
     private final RssFeedSyncLogService rssFeedSyncLogService;
 
 
     public FriendEndpoint(ReactiveExtensionClient client, RssDetailService rssDetailService,
-        ApplicationEventPublisher eventPublisher, RssFeedSyncLogService rssFeedSyncLogService) {
+        RssFeedSyncLogService rssFeedSyncLogService) {
         this.client = client;
         this.rssDetailService = rssDetailService;
-        this.eventPublisher = eventPublisher;
         this.rssFeedSyncLogService = rssFeedSyncLogService;
     }
 
@@ -65,9 +60,9 @@ public class FriendEndpoint implements CustomEndpoint {
                     );
                 FriendPostQuery.buildParameters(builder);
             })
-            .DELETE("friendposts/-/delete", this::deleteAllFriendPost, builder -> {
-                builder.operationId("DeleteAllFriendPost")
-                    .description("Delete All FriendPost.")
+            .DELETE("friendposts/-/delete", this::deleteAllRssFeedSyncLog, builder -> {
+                builder.operationId("DeleteAllRssFeedSyncLog")
+                    .description("Delete All RssFeedSyncLog.")
                     .tag(tag)
                     .response(responseBuilder()
                         .implementation(Void.class));
@@ -122,13 +117,28 @@ public class FriendEndpoint implements CustomEndpoint {
             .flatMap(friendPosts -> ServerResponse.ok().bodyValue(friendPosts));
     }
 
-    Mono<ServerResponse> deleteAllFriendPost(ServerRequest request) {
-        return client.listAll(FriendPost.class,new ListOptions().setFieldSelector(FieldSelector.of(isNull("metadata.deletionTimestamp"))), Sort.unsorted())
-            .flatMap(friendPost -> client.delete(friendPost))
-            .flatMap(friendPost -> client.listAll(RssFeedSyncLog.class,new ListOptions().setFieldSelector(FieldSelector.of(isNull("metadata.deletionTimestamp"))), Sort.unsorted())
-                .flatMap(rssFeedSyncLog -> client.delete(rssFeedSyncLog))
-            )
+    Mono<ServerResponse> deleteAllRssFeedSyncLog(ServerRequest request) {
+        return deleteAllRssFeedSyncLog()
+            .then(deleteAllFriendPost())
             .then(ServerResponse.ok().build());
+    }
+
+    private Mono<Void> deleteAllRssFeedSyncLog() {
+        ListOptions listOptions = new ListOptions().setFieldSelector(
+            FieldSelector.of(isNull("metadata.deletionTimestamp")));
+
+        return client.listAll(RssFeedSyncLog.class, listOptions, Sort.unsorted())
+            .flatMap(rssFeedSyncLog -> client.delete(rssFeedSyncLog))
+            .then();
+    }
+
+    private Mono<Void> deleteAllFriendPost() {
+        ListOptions listOptions = new ListOptions().setFieldSelector(
+            FieldSelector.of(isNull("metadata.deletionTimestamp")));
+
+        return client.listAll(FriendPost.class, listOptions, Sort.unsorted())
+            .flatMap(friendPost -> client.delete(friendPost))
+            .then();
     }
 
     Mono<ServerResponse> listRssSyncLog(ServerRequest request) {
@@ -148,10 +158,9 @@ public class FriendEndpoint implements CustomEndpoint {
 
     private Mono<ServerResponse> syncRssFeed(ServerRequest request) {
         var name = request.pathVariable("name");
-        return Mono.defer(() -> {
-            eventPublisher.publishEvent(new RssFeedSyncEvent(this, "cron-friends-default", name));
-            return ServerResponse.ok().build();
-        });
+
+        return rssFeedSyncLogService.publishRssFeedSyncEvent(name)
+            .flatMap(rssFeedSyncEvent -> ServerResponse.ok().build());
     }
 
     @Override

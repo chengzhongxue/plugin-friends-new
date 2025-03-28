@@ -31,7 +31,7 @@ public class LinkReconciler implements Reconciler<Reconciler.Request> {
                         equal("spec.linkName",link.getMetadata().getName())
                     ));
                     client.listAll(FriendPost.class,friendPostListOptions, Sort.by("metadata.creationTimestamp").descending())
-                        .forEach(client::delete);
+                        .forEach(friendPost -> client.delete(friendPost));
                 }
         });
         return Result.doNotRetry();
