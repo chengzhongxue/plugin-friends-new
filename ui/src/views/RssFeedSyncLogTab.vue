@@ -19,7 +19,7 @@ const keyword = useRouteQuery<string>("keyword", "");
 const page = useRouteQuery<number>("page", 1, {
   transform: Number,
 });
-const size = useRouteQuery<number>("size", 20, {
+const size = useRouteQuery<number>("size", 30, {
   transform: Number,
 });
 const total = ref(0);
@@ -130,7 +130,7 @@ const {
         size-label="条 / 页"
         :total-label="`共 ${total} 项数据`"
         :total="total"
-        :size-options="[20, 30, 50, 100]"
+        :size-options="[30, 60, 90]"
       />
     </template>
   </VCard>

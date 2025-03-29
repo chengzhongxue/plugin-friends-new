@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import {VButton} from "@halo-dev/components";
-import {computed, onMounted, ref, nextTick} from "vue";
+import {Toast, VButton} from "@halo-dev/components";
+import {ref} from "vue";
 import type {CronFriendPost} from "@/api/generated";
 import cloneDeep from "lodash.clonedeep";
 import {friendsCoreApiClient} from "@/api";
-import { submitForm } from "@formkit/core";
 import LinkFormKit from "@/components/formkit/LinkFormKit.vue";
+import {useMutation, useQuery} from "@tanstack/vue-query";
 
 const Se = "cron-friends-default"
 
@@ -15,7 +15,7 @@ const initialFormState: CronFriendPost = {
     creationTimestamp: ""
   },
   spec: {
-    cron: "0 0 * * * *",
+    cron: "@daily",
     timezone:"Asia/Shanghai",
     suspend: false,
     successfulRetainLimit: 0,
@@ -39,57 +39,51 @@ const cronOptions = [{
   value: "@hourly"
 }]
 
-const isUpdateMode = computed(() => {
-  return !!formState.value.metadata.creationTimestamp;
-});
-
-const  saving = ref(false);
 const formState = ref<CronFriendPost>(cloneDeep(initialFormState));
 
-const mutate = async () => {
-  saving.value = true;
-  try {
-    if (isUpdateMode.value) {
-      const {
-        data: data
-      } = await friendsCoreApiClient.cron.getCronFriendPost({
+const {isLoading: cronIsLoading, isFetching: cronIsFetching} = useQuery({
+  queryKey: ["cron-friend-post"],
+  queryFn: async () => {
+    const {data} = await friendsCoreApiClient.cron.getCronFriendPost({
+      name: Se
+    },{
+      mute: true
+    });
+    return data;
+  },
+  onSuccess(data) {
+    formState.value =  data
+  },
+  retry: false
+})
+
+const { mutate:save, isLoading:saveIsLoading } = useMutation({
+  mutationKey: ["cron-friend-post-save"],
+  mutationFn: async () => {
+    if (formState.value.metadata.creationTimestamp) {
+      const { data: data } = await friendsCoreApiClient.cron.getCronFriendPost({
         name: Se
       });
-      return formState.value = {
+      formState.value = {
         ...formState.value,
         status: data.status,
         metadata: data.metadata
-      },
-      await friendsCoreApiClient.cron.updateCronFriendPost({
-        name: Se,
+      };
+      return await friendsCoreApiClient.cron.updateCronFriendPost({
+          name: Se,
+          cronFriendPost: formState.value
+        });
+    }else {
+      return await friendsCoreApiClient.cron.createCronFriendPost({
         cronFriendPost: formState.value
       });
-    } else {
-      const { data: createCronFriendPost } = await friendsCoreApiClient.cron.createCronFriendPost({
-        cronFriendPost: formState.value
-      });
-      formState.value = createCronFriendPost
     }
-  } finally {
-    saving.value = false;
+  },
+  onSuccess(data) {
+    formState.value = data.data
+    Toast.success("保存成功");
   }
-}
-
-onMounted(async () => {
-
-  const {data: data} = await friendsCoreApiClient.cron.listCronFriendPost();
-  const items = data.items;
-  if (items?.length){
-    formState.value = items[0]
-  }
-  
 });
-const handleSave = () => {
-
-  nextTick(() => {
-    submitForm("cron-setting");
-  });
-};
 
 </script>
 
@@ -100,14 +94,13 @@ const handleSave = () => {
     <div class="bg-white p-4">
       <div>
         <FormKit
-          id="cron-setting"
+          id="cron-setting-form"
           v-model="formState.spec"
-          name="cron-setting"
-          :actions="false"
+          name="cron-setting-form"
           :preserve="true"
           type="form"
-          @submit="mutate"
-          submit-label="Login"
+          :disabled="cronIsFetching"
+          @submit="save"
         >
           <FormKit
             type="checkbox"
@@ -154,9 +147,10 @@ const handleSave = () => {
       <div v-permission="['plugin:friends:manage']" class="pt-5">
         <div class="flex justify-start">
           <VButton
-            :loading="saving"
+            :loading="saveIsLoading"
+            :cronIsLoading="cronIsLoading"
             type="secondary"
-            @click="handleSave"
+            @click="$formkit.submit('cron-setting-form')"
           >
             保存
           </VButton>
