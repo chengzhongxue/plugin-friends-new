@@ -5,7 +5,7 @@ metadata:
   annotations:
     "store.halo.run/app-id": "app-yISsV"
 spec:
-  enabled: true
+  enabled: false
   requires: ">=2.19.0"
   pluginDependencies:
     "PluginLinks": ">=1.5.0"

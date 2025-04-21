@@ -1,5 +1,3 @@
-import type {LinkSpec} from "@/api/generated/models/link-spec";
-
 export * from './add-operation';
 export * from './channel';
 export * from './copy-operation';
