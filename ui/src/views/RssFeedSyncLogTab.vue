@@ -8,6 +8,7 @@ import {
   VLoading,
   VPagination,
   IconRefreshLine,
+  VEntityContainer
 } from "@halo-dev/components";
 import { useRouteQuery } from "@vueuse/router";
 import {friendsApiClient} from "@/api";
@@ -110,17 +111,13 @@ const {
     </Transition>
 
     <Transition appear name="fade">
-      <ul
-        class="box-border h-full w-full divide-y divide-gray-100"
-        role="list"
-      >
-        <li v-for="(rssSyncLog, index) in rssSyncLogs" :key="index">
-          <RssFeedSyncLogListItem
-            :rss-feed-sync-log="rssSyncLog"
-          >
-          </RssFeedSyncLogListItem>
-        </li>
-      </ul>
+      <VEntityContainer>
+        <RssFeedSyncLogListItem
+          v-for="(rssSyncLog, index) in rssSyncLogs" :key="index"
+          :rss-feed-sync-log="rssSyncLog"
+        >
+        </RssFeedSyncLogListItem>
+      </VEntityContainer>
     </Transition>
     <template #footer>
       <VPagination

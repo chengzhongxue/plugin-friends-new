@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@halo-dev/api-client": "^2.19.0",
-    "@halo-dev/components": "^2.19.0",
+    "@halo-dev/components": "https://pkg.pr.new/@halo-dev/components@7383",
     "@halo-dev/console-shared": "^2.19.0",
     "@halo-dev/richtext-editor": "^2.19.0",
     "axios": "^1.7.2",
