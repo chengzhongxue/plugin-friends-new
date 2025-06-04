@@ -95,19 +95,19 @@ const statusText = computed(() => {
     <template #end>
       <VEntityField >
         <template #description>
-          
           <VStatusDot
             v-if="!rssFeedSyncLog.log"
             state="warning"
             animate
             :text="'待同步'"
           />
-          <VStatusDot
+          <div
             v-else
-            :state="statusState"
-            animate
-            :text="statusText"
-          />
+            :class="`status-dot-wrapper status-dot-${statusState} status-dot-animate`"
+          >
+            <div class="status-dot-body"><span class="status-dot-inner"></span></div>
+            <span class="status-dot-text" style="white-space: pre-wrap">{{statusText}}</span>
+          </div>
         </template>
       </VEntityField>
       <VEntityField
