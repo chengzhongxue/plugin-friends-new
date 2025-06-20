@@ -11,8 +11,11 @@ metadata:
     rbac.authorization.halo.run/display-name: "编辑器RSS"
 rules:
   - apiGroups: ["api.friend.moony.la"]
-    resources: ["parsingrss"]
+    resources: ["parsingrss", "friendposts"]
     verbs: [ "get", "list" ]
+  - apiGroups: ["friend.moony.la"]
+    resources: ["friendposts"]
+    verbs: ["get", "list"]
 
 ---
 
