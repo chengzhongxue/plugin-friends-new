@@ -1,17 +1,17 @@
 apiVersion: v1alpha1
 kind: Role
 metadata:
-  name: role-template-fridends-rss-default
+  name: role-template-fridends-anonymous
   labels:
     halo.run/role-template: "true"
     halo.run/hidden: "true"
     rbac.authorization.halo.run/aggregate-to-anonymous: "true"
   annotations:
-    rbac.authorization.halo.run/module: "editor-fridends-rss"
-    rbac.authorization.halo.run/display-name: "编辑器RSS"
+    rbac.authorization.halo.run/module: "朋友圈"
+    rbac.authorization.halo.run/display-name: "朋友圈匿名接口"
 rules:
   - apiGroups: ["api.friend.moony.la"]
-    resources: ["parsingrss"]
+    resources: ["parsingrss","friendposts"]
     verbs: [ "get", "list" ]
 
 ---

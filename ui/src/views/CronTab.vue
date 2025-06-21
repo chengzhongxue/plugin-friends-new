@@ -148,7 +148,7 @@ const { mutate:save, isLoading:saveIsLoading } = useMutation({
         <div class="flex justify-start">
           <VButton
             :loading="saveIsLoading"
-            :cronIsLoading="cronIsLoading"
+            :disabled="cronIsLoading"
             type="secondary"
             @click="$formkit.submit('cron-setting-form')"
           >
