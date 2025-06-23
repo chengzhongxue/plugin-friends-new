@@ -14,6 +14,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 import run.halo.app.plugin.ReactiveSettingFetcher;
 import run.halo.app.theme.TemplateNameResolver;
+import run.halo.app.theme.router.ModelConst;
 import run.halo.app.theme.router.PageUrlUtils;
 import run.halo.app.theme.router.UrlContextListResult;
 
@@ -42,7 +43,8 @@ public class FriendRouter {
         private Mono<ServerResponse> handlerFunction(ServerRequest request) {
             return  templateNameResolver.resolveTemplateNameOrDefault(request.exchange(), "friends")
                 .flatMap( templateName -> ServerResponse.ok().render(templateName,
-                    java.util.Map.of("friends", friendPostList(request),
+                    java.util.Map.of(ModelConst.TEMPLATE_ID, templateName,
+                        "friends", friendPostList(request),
                         "title",getFriendTitle())
                 ));
         }
