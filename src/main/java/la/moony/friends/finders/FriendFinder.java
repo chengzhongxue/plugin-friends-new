@@ -1,20 +1,25 @@
 package la.moony.friends.finders;
 
+import la.moony.friends.finders.impl.FriendFinderImpl;
 import la.moony.friends.vo.FriendPostVo;
 import la.moony.friends.vo.LinkGroupVo;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import run.halo.app.extension.ListResult;
+import java.util.Map;
 
 public interface FriendFinder {
 
     Flux<FriendPostVo> listAll();
 
-    Mono<ListResult<FriendPostVo>> list(Integer page, Integer size);
+    /**
+     * Lists friendPosts by query params.
+     *
+     * @param params query params see {@link FriendFinderImpl.FriendPostQuery}
+     */
+    Mono<ListResult<FriendPostVo>> list(Map<String, Object> params);
 
     Mono<FriendPostVo> getByName(String friendPostName);
-
-    Mono<ListResult<FriendPostVo>> listByLinkName(Integer page, Integer size,String linkName);
 
     Flux<LinkGroupVo> linkGroupBy();
 }

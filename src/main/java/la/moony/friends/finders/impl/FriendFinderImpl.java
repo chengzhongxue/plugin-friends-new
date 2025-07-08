@@ -6,11 +6,14 @@ import la.moony.friends.extension.Link;
 import la.moony.friends.extension.LinkGroup;
 import la.moony.friends.extension.RssFeedSyncLog;
 import la.moony.friends.finders.FriendFinder;
+import la.moony.friends.util.SortUtils;
 import la.moony.friends.vo.FriendPostVo;
 import la.moony.friends.vo.LinkGroupVo;
 import la.moony.friends.vo.LinkVo;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Sort;
 import org.springframework.util.Assert;
 import reactor.core.publisher.Flux;
@@ -18,9 +21,12 @@ import reactor.core.publisher.Mono;
 import org.springframework.lang.NonNull;
 import run.halo.app.extension.*;
 import run.halo.app.extension.router.selector.FieldSelector;
+import run.halo.app.infra.utils.JsonUtils;
 import run.halo.app.theme.finders.Finder;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.springframework.data.domain.Sort.Order.asc;
@@ -47,9 +53,11 @@ public class FriendFinderImpl implements FriendFinder {
     }
 
     @Override
-    public Mono<ListResult<FriendPostVo>> list(Integer page, Integer size) {
-        var pageRequest = PageRequestImpl.of(pageNullSafe(page), sizeNullSafe(size), defaultSort());
-        return pageFriendPost(null, pageRequest);
+    public Mono<ListResult<FriendPostVo>> list(Map<String, Object> params) {
+        var query = Optional.ofNullable(params)
+            .map(map -> JsonUtils.mapToObject(map, FriendPostQuery.class))
+            .orElseGet(FriendPostQuery::new);
+        return pageFriendPost(query.toListOptions(), query.toPageRequest());
     }
 
 
@@ -57,13 +65,6 @@ public class FriendFinderImpl implements FriendFinder {
     public Mono<FriendPostVo> getByName(String friendPostName) {
         return client.fetch(FriendPost.class, friendPostName)
             .map(FriendPostVo::from);
-    }
-
-    @Override
-    public Mono<ListResult<FriendPostVo>> listByLinkName(Integer page, Integer size,String linkName) {
-        var query = equal("spec.linkName", linkName);
-        var pageRequest = PageRequestImpl.of(pageNullSafe(page), sizeNullSafe(size), defaultSort());
-        return pageFriendPost(FieldSelector.of(query), pageRequest);
     }
 
     @Override
@@ -86,13 +87,16 @@ public class FriendFinderImpl implements FriendFinder {
             ));
     }
 
-    private Mono<ListResult<FriendPostVo>> pageFriendPost(FieldSelector fieldSelector, PageRequest page){
+    private Mono<ListResult<FriendPostVo>> pageFriendPost(ListOptions queryOptions, PageRequest page){
         var listOptions = new ListOptions();
         var query = all();
-        if (fieldSelector != null && fieldSelector.query() != null) {
-            query = and(query, fieldSelector.query());
-        }
         listOptions.setFieldSelector(FieldSelector.of(query));
+        var fieldSelector = queryOptions.getFieldSelector();
+        if (fieldSelector != null) {
+            listOptions.setFieldSelector(listOptions.getFieldSelector()
+                .andQuery(fieldSelector.query()));
+        }
+
         return client.listBy(FriendPost.class, listOptions, page)
             .flatMap(list -> Flux.fromStream(list.get())
                 .concatMap(this::getFriendPostVo)
@@ -101,8 +105,7 @@ public class FriendFinderImpl implements FriendFinder {
                     list.getTotal(), friendPostVos)
                 )
             )
-            .defaultIfEmpty(
-                new ListResult<>(page.getPageNumber(), page.getPageSize(), 0L, List.of()));
+            .defaultIfEmpty(ListResult.emptyResult());
 
     }
 
@@ -195,12 +198,33 @@ public class FriendFinderImpl implements FriendFinder {
         return Mono.just(friendPostVo);
     }
 
-    int pageNullSafe(Integer page) {
+    static int pageNullSafe(Integer page) {
         return ObjectUtils.defaultIfNull(page, 1);
     }
 
-    int sizeNullSafe(Integer size) {
+    static int sizeNullSafe(Integer size) {
         return ObjectUtils.defaultIfNull(size, 10);
+    }
+
+    @Data
+    public static class FriendPostQuery {
+        private Integer page;
+        private Integer size;
+        private String linkName;
+        private List<String> sort;
+
+        public ListOptions toListOptions() {
+            var builder = ListOptions.builder();
+            if (StringUtils.isNotBlank(linkName)) {
+                builder.andQuery(equal("spec.linkName", linkName));
+            }
+            return builder.build();
+        }
+
+        public PageRequest toPageRequest() {
+            return PageRequestImpl.of(pageNullSafe(getPage()),
+                sizeNullSafe(getSize()), SortUtils.resolve(sort).and(defaultSort()));
+        }
     }
 
 

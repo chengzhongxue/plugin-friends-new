@@ -4,6 +4,7 @@ import la.moony.friends.finders.FriendFinder;
 import la.moony.friends.vo.FriendPostVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,9 @@ import run.halo.app.theme.TemplateNameResolver;
 import run.halo.app.theme.router.ModelConst;
 import run.halo.app.theme.router.PageUrlUtils;
 import run.halo.app.theme.router.UrlContextListResult;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static run.halo.app.theme.router.PageUrlUtils.totalPage;
 
@@ -58,17 +62,27 @@ public class FriendRouter {
         private Mono<UrlContextListResult<FriendPostVo>> friendPostList(ServerRequest request) {
             String path = request.path();
             int pageNum = pageNumInPathVariable(request);
+            String linkName = request.queryParam("linkName")
+                .filter(StringUtils::isNotBlank)
+                .orElse(null);
             return this.settingFetcher.get("base")
                 .map(item -> item.get("pageSize").asInt(10))
                 .defaultIfEmpty(10)
-                .flatMap(pageSize -> friendFinder.list(pageNum, pageSize)
-                    .map(list -> new UrlContextListResult.Builder<FriendPostVo>()
-                        .listResult(list)
-                        .nextUrl(PageUrlUtils.nextPageUrl(path, totalPage(list)))
-                        .prevUrl(PageUrlUtils.prevPageUrl(path))
-                        .build()
-                    )
-                );
+                .flatMap(pageSize ->  {
+                    Map<String, Object> params = new HashMap<>();
+                    params.put("page",pageNum);
+                    params.put("size",pageSize);
+                    if(StringUtils.isNotBlank(linkName)){
+                        params.put("linkName",linkName);
+                    }
+                    return friendFinder.list(params)
+                            .map(list -> new UrlContextListResult.Builder<FriendPostVo>()
+                                .listResult(list)
+                                .nextUrl(PageUrlUtils.nextPageUrl(path, totalPage(list)))
+                                .prevUrl(PageUrlUtils.prevPageUrl(path))
+                                .build()
+                            );
+                });
         }
 
     
