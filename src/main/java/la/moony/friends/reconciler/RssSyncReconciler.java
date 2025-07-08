@@ -183,13 +183,16 @@ public class RssSyncReconciler implements Reconciler<RssSyncReconciler.Request>,
             SyndFeed feed = new SyndFeedInput().build(new XmlReader(new URL(rssAddress)));
             int postCount = 0;
             for (SyndEntry entry : feed.getEntries()) {
-                Date publishedDate = entry.getPublishedDate();
+                Date date = entry.getPublishedDate();
+                if (date == null) {
+                    date = entry.getUpdatedDate();
+                }
                 String value = entry.getDescription().getValue();
                 FriendPost friendPost = new FriendPost();
                 friendPost.setSpec(new FriendPost.FriendPostSpec());
                 friendPost.getSpec().setTitle(entry.getTitle());
                 friendPost.getSpec().setPostLink(entry.getLink());
-                friendPost.getSpec().setPubDate(publishedDate.toInstant());
+                friendPost.getSpec().setPubDate(date.toInstant());
                 friendPost.getSpec().setDescription(value);
                 friendPostList.add(friendPost);
                 postCount++;
