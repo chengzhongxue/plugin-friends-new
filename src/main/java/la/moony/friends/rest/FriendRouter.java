@@ -17,6 +17,7 @@ import run.halo.app.theme.TemplateNameResolver;
 import run.halo.app.theme.router.ModelConst;
 import run.halo.app.theme.router.PageUrlUtils;
 import run.halo.app.theme.router.UrlContextListResult;
+import org.apache.commons.lang3.StringUtils;
 
 import static run.halo.app.theme.router.PageUrlUtils.totalPage;
 
@@ -58,17 +59,31 @@ public class FriendRouter {
         private Mono<UrlContextListResult<FriendPostVo>> friendPostList(ServerRequest request) {
             String path = request.path();
             int pageNum = pageNumInPathVariable(request);
+            String linkName = request.queryParam("linkName")
+                .filter(StringUtils::isNotBlank)
+                .orElse(null);
             return this.settingFetcher.get("base")
                 .map(item -> item.get("pageSize").asInt(10))
                 .defaultIfEmpty(10)
-                .flatMap(pageSize -> friendFinder.list(pageNum, pageSize)
-                    .map(list -> new UrlContextListResult.Builder<FriendPostVo>()
-                        .listResult(list)
-                        .nextUrl(PageUrlUtils.nextPageUrl(path, totalPage(list)))
-                        .prevUrl(PageUrlUtils.prevPageUrl(path))
-                        .build()
-                    )
-                );
+                .flatMap(pageSize -> {
+                    if(StringUtils.isNotBlank(linkName)){
+                        return friendFinder.listByLinkName(pageNum, pageSize, linkName)
+                            .map(list -> new UrlContextListResult.Builder<FriendPostVo>()
+                                .listResult(list)
+                                .nextUrl(PageUrlUtils.nextPageUrl(path, totalPage(list)))
+                                .prevUrl(PageUrlUtils.prevPageUrl(path))
+                                .build()
+                            );
+                    }else{
+                        return friendFinder.list(pageNum, pageSize)
+                            .map(list -> new UrlContextListResult.Builder<FriendPostVo>()
+                                .listResult(list)
+                                .nextUrl(PageUrlUtils.nextPageUrl(path, totalPage(list)))
+                                .prevUrl(PageUrlUtils.prevPageUrl(path))
+                                .build()
+                            );
+                    }
+                });
         }
 
     
