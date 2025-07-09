@@ -1,6 +1,7 @@
 package la.moony.friends.reconciler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rometools.rome.feed.synd.SyndContent;
 import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.SyndFeedInput;
@@ -95,6 +96,7 @@ public class RssSyncReconciler implements Reconciler<RssSyncReconciler.Request>,
         Optional<RssFeedSyncLog> fetch = client.fetch(RssFeedSyncLog.class, syncLogName);
         if (fetch.isPresent()) {
             RssFeedSyncLog rssFeedSyncLog = fetch.get();
+            rssFeedSyncLog.setState(newRssFeedSyncLog.getState());
             rssFeedSyncLog.setSyncTime(newRssFeedSyncLog.getSyncTime());
             rssFeedSyncLog.setFailureReason(newRssFeedSyncLog.getFailureReason());
             rssFeedSyncLog.setFailureMessage(newRssFeedSyncLog.getFailureMessage());
@@ -187,13 +189,23 @@ public class RssSyncReconciler implements Reconciler<RssSyncReconciler.Request>,
                 if (date == null) {
                     date = entry.getUpdatedDate();
                 }
-                String value = entry.getDescription().getValue();
+                String description = "";
+                SyndContent content = entry.getDescription();
+                if (content != null) {
+                    description = content.getValue();
+                }else {
+                    List<SyndContent> contents = entry.getContents();
+                    if (!contents.isEmpty()) {
+                        description = contents.get(0).getValue();
+                    }
+                }
+
                 FriendPost friendPost = new FriendPost();
                 friendPost.setSpec(new FriendPost.FriendPostSpec());
                 friendPost.getSpec().setTitle(entry.getTitle());
                 friendPost.getSpec().setPostLink(entry.getLink());
                 friendPost.getSpec().setPubDate(date.toInstant());
-                friendPost.getSpec().setDescription(value);
+                friendPost.getSpec().setDescription(description);
                 friendPostList.add(friendPost);
                 postCount++;
                 if (postCount >= postsLimit) {

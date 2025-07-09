@@ -7,10 +7,13 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import run.halo.app.extension.ListResult;
 import java.util.Map;
+import org.springframework.lang.Nullable;
 
 public interface FriendFinder {
 
     Flux<FriendPostVo> listAll();
+
+    Mono<ListResult<FriendPostVo>> list(@Nullable Integer page, @Nullable Integer size);
 
     /**
      * Lists friendPosts by query params.

@@ -53,6 +53,15 @@ public class FriendFinderImpl implements FriendFinder {
     }
 
     @Override
+    public Mono<ListResult<FriendPostVo>> list(Integer page, Integer size) {
+        return pageFriendPost(new ListOptions(), getPageRequest(page, size));
+    }
+
+    private PageRequestImpl getPageRequest(Integer page, Integer size) {
+        return PageRequestImpl.of(pageNullSafe(page), sizeNullSafe(size), defaultSort());
+    }
+
+    @Override
     public Mono<ListResult<FriendPostVo>> list(Map<String, Object> params) {
         var query = Optional.ofNullable(params)
             .map(map -> JsonUtils.mapToObject(map, FriendPostQuery.class))
